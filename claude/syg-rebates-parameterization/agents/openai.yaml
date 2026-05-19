@@ -1,0 +1,5 @@
+interface:
+  display_name: "SYG Parametrizacao Rebates"
+  short_description: "Governanca de contrato CSV e evolucao segura no rebates"
+  default_prompt: "Use $syg-rebates-parameterization para governar contrato CSV, versao e transicao retrocompativel do projeto rebates."
+

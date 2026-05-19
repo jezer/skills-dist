@@ -1,0 +1,4 @@
+interface:
+  display_name: "CloudInformation AWS"
+  short_description: "Consulta read-only de contexto AWS para SYG"
+  default_prompt: "Use $cloudinformation-aws para consultar informacoes AWS em modo somente leitura e rotear mudancas para skills executoras."

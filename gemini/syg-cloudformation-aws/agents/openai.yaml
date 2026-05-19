@@ -1,0 +1,4 @@
+interface:
+  display_name: "SYG CloudFormation AWS"
+  short_description: "Padrao SYG para parametros e validacao de CloudFormation"
+  default_prompt: "Use $syg-cloudformation-aws para padronizar parametros, estrutura e validacoes de CloudFormation nos projetos SYG sem regressao."

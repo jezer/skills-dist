@@ -1,0 +1,5 @@
+interface:
+  display_name: "Manter Chamados"
+  short_description: "Mantem contexto de chamados"
+  default_prompt: "Use $maintain-tickets quando o chamado atual nao estiver claro."
+

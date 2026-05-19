@@ -1,0 +1,5 @@
+name: connect-github-gitlab
+description: Diagnosticar e corrigir conectividade Git com GitHub/GitLab.
+instructions:
+  default_prompt: "Use $connect-github-gitlab quando houver falha de autenticacao ou conectividade com GitHub/GitLab e priorize scripts parametrizaveis da skill."
+

@@ -1,0 +1,5 @@
+interface:
+  display_name: "Manter AGENTS"
+  short_description: "Mantem arquivos AGENTS.md"
+  default_prompt: "Use $maintain-agents para revisar ou atualizar arquivos AGENTS.md do workspace."
+

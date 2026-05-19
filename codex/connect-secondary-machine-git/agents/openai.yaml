@@ -1,0 +1,5 @@
+name: connect-secondary-machine-git
+description: Restabelecer Git/SSH em segunda maquina.
+instructions:
+  default_prompt: "Use $connect-secondary-machine-git quando a segunda maquina nao autenticar no GitHub/GitLab e priorize scripts parametrizaveis da skill."
+

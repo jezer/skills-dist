@@ -1,0 +1,5 @@
+interface:
+  display_name: "Manter Git"
+  short_description: "Mantem operacoes Git seguras"
+  default_prompt: "Use $maintain-git para preparar ou executar operacoes Git conforme C:\\codes\\tools\\git."
+

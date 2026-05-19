@@ -1,0 +1,4 @@
+interface:
+  display_name: "SYG Workflows User Zone"
+  short_description: "Padrao SYG de naming e cascata de workflows"
+  default_prompt: "Use $syg-workflows-user-zone para padronizar naming, cascata e transicao de jobs/workflows user_zone sem regressao."

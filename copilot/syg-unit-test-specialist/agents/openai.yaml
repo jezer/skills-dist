@@ -1,0 +1,5 @@
+interface:
+  display_name: "Especialista Teste Unitario SYG"
+  short_description: "Padrao de testes unitarios Python/Glue para projetos SYG"
+  default_prompt: "Use $syg-unit-test-specialist para criar, revisar e padronizar testes unitarios nos projetos SYG com foco em nao regressao."
+

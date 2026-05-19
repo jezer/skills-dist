@@ -1,0 +1,55 @@
+﻿{
+    "generated_at":  "2026-05-19T01:11:31",
+    "apply":  false,
+    "skills_oficiais":  29,
+    "gemini":  {
+                   "total":  28,
+                   "missing":  [
+
+                               ],
+                   "extras":  [
+
+                              ]
+               },
+    "copilot":  {
+                    "total":  28,
+                    "missing":  [
+
+                                ],
+                    "extras":  [
+
+                               ]
+                },
+    "claude":  {
+                   "total":  28,
+                   "missing":  [
+
+                               ],
+                   "extras":  [
+
+                              ]
+               },
+    "codex":  {
+                  "total":  28,
+                  "missing":  [
+
+                              ],
+                  "extras":  [
+
+                             ]
+              },
+    "codex_global":  {
+                         "total":  29,
+                         "missing":  [
+
+                                     ],
+                         "extras":  [
+
+                                    ]
+                     },
+    "codex_bridge_ok":  true,
+    "codex_bridge_observacoes":  [
+
+                                 ],
+    "checkpoint_path":  "C:\\codes\\skills\\dist\\sync-checkpoint.json"
+}

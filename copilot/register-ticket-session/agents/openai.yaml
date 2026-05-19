@@ -1,0 +1,5 @@
+interface:
+  display_name: "Registrar Sessao"
+  short_description: "Registra sessoes de chamados"
+  default_prompt: "Use $register-ticket-session para registrar a sessao atual no chamado ativo."
+

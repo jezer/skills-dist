@@ -1,0 +1,5 @@
+interface:
+  display_name: "Manter File System"
+  short_description: "Mantem regras de pastas e repositorios"
+  default_prompt: "Use $maintain-filesystem para revisar regras de pastas via C:\\codes\\pv\\regras_file_system."
+
