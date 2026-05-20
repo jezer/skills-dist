@@ -1,20 +1,21 @@
 param(
     [ValidateSet("github", "gitlab", "ambos")]
-    [string]$Host = "ambos"
+    [string]$Provider = "ambos"
 )
 
 $ErrorActionPreference = "Stop"
+$PSNativeCommandUseErrorActionPreference = $false
 
 function Test-HostConn {
     param([string]$Target)
-    $out = ssh -T ("git@{0}" -f $Target) 2>&1
+    $out = cmd /c ("ssh -T git@{0} 2>&1" -f $Target)
     $exitCode = $LASTEXITCODE
-    $joined = ($out -join " ")
+    $joined = ($out | Out-String).Trim()
     $ok = ($joined -match "successfully authenticated|Welcome to GitLab") -or ($exitCode -eq 0)
     [pscustomobject]@{ host = $Target; ok = $ok; exit_code = $exitCode; detail = $joined }
 }
 
-$targets = switch ($Host) {
+$targets = switch ($Provider) {
     "github" { @("github.com") }
     "gitlab" { @("gitlab.com") }
     default { @("github.com", "gitlab.com") }

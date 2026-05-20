@@ -15,7 +15,7 @@ Padronizar e automatizar operacoes Git recorrentes com limites seguros.
 2. Usar para clonar repositorio quando solicitado.
 3. Usar para sugerir ou criar branch.
 4. Usar para preparar mensagem de commit.
-5. Usar para commit, push e sincronizacao no mesmo fluxo quando solicitado explicitamente.
+5. Quando houver pedido de commit, executar por padrao o fluxo completo `sync + commit + push`, exceto se o usuario pedir explicitamente para nao fazer uma dessas etapas.
 6. Consultar `C:\codes\tools\git` somente quando a operacao exigir artefato compartilhado, inventario ou referencia da tool.
 7. Usar para bootstrap de repositorio novo, reorganizado ou ja existente com `git-convencoes.md` na raiz.
 8. Quando o fluxo exigir publicacao, criar ou vincular o repositorio no GitHub com `gh` a partir do bootstrap.
@@ -27,7 +27,7 @@ Padronizar e automatizar operacoes Git recorrentes com limites seguros.
 
 ## Limites
 
-1. Nao executar commit/push/sync sem pedido explicito.
+1. Nao executar operacao Git persistente sem pedido explicito.
 2. Nao executar commit ou push na branch `main`/`master`; criar branch de trabalho antes.
 3. Nao executar reset, rebase, merge ou force push sem pedido explicito.
 4. Nao sobrescrever repositorio existente sem confirmacao.
@@ -56,7 +56,7 @@ Padronizar e automatizar operacoes Git recorrentes com limites seguros.
 6. Conferir `git status` antes de branch, commit, pull, merge, rebase ou push.
 7. Quando o pedido for clone, priorizar `scripts/clonar-repositorio.ps1` com URL e destino explicitos.
 8. Antes de commit ou push, validar que a branch atual nao e `main` nem `master`; se for, criar branch de trabalho.
-9. Executar somente a operacao solicitada.
+9. Se o pedido incluir commit e nao houver restricao explicita, executar `sync + commit + push` no mesmo fluxo.
 10. Consultar `C:\codes\tools\git` apenas se houver necessidade de artefato compartilhado.
 11. Informar status verificavel ao concluir.
 12. Quando o repositorio tiver `git-convencoes.md` na raiz, respeitar o arquivo como referencia local do repositorio.
@@ -65,14 +65,15 @@ Padronizar e automatizar operacoes Git recorrentes com limites seguros.
 15. Preferir scripts PowerShell reutilizaveis para bootstrap, clone, branch, commit, publicacao no GitHub e sincronizacao em vez de comandos soltos.
 16. Para operacoes principais, priorizar os scripts da skill (`clonar-repositorio.ps1`, `novo-repositorio.ps1`, `nova-branch.ps1`, `preparar-commit.ps1`, `commit-push.ps1`, `publicar-github.ps1`, `sync-repositorio.ps1`) e evoluir esses scripts quando houver necessidade recorrente.
 17. No fluxo de commit, priorizar `preparar-commit.ps1` para mensagem e `commit-push.ps1` para execucao parametrizada (`-AddAll`, `-Push`, `-Sync`, `-NoVerify`, `-AllowMainMaster`, `-DryRun`) antes de usar comandos Git soltos.
-18. Para operacoes em lote, priorizar `commitar-todos-repos.ps1` lendo o indice root e aplicar por padrao `sync + commit + push` juntos.
-18. No bootstrap com `novo-repositorio.ps1`, tratar `init` de forma idempotente: se `.git` ja existir, nao falhar e seguir o fluxo sem reinicializar.
-19. Quando houver warnings de `LF -> CRLF`, aplicar `padronizar-eol.ps1` para gravar `.gitattributes` e, quando necessario, renormalizar o repositorio.
-20. Em scripts ou comandos soltos desta skill, aplicar `-c safe.directory=<repo>` em toda chamada Git que opere dentro de repositorio local.
-21. Quando detectar repositorio embutido nao planejado, orientar normalizacao para pasta comum (remover gitlink no pai, remover `.git` interno e adicionar arquivos no pai).
-22. Antes de concluir manutencao de estrutura de projetos por empresa, atualizar e validar `C:\codes\indice-repositorios-root.json` e `C:\codes\indice-repositorios-root.md`.
-23. Quando diagnostico indicar erro de conexao, acionar scripts parametrizaveis dos skills `connect-github-gitlab` ou `connect-secondary-machine-git` antes de retentar push/pull.
-24. Sem validacao positiva de `connect-github-gitlab`, bloquear operacao remota e registrar pendencia de autenticacao na sessao/chamado.
+18. O padrao operacional de commit desta skill e `-Sync:$true -Push:$true`; qualquer excecao deve ficar explicita na resposta e no registro da sessao.
+19. Para operacoes em lote, priorizar `commitar-todos-repos.ps1` lendo o indice root e aplicar por padrao `sync + commit + push` juntos.
+20. No bootstrap com `novo-repositorio.ps1`, tratar `init` de forma idempotente: se `.git` ja existir, nao falhar e seguir o fluxo sem reinicializar.
+21. Quando houver warnings de `LF -> CRLF`, aplicar `padronizar-eol.ps1` para gravar `.gitattributes` e, quando necessario, renormalizar o repositorio.
+22. Em scripts ou comandos soltos desta skill, aplicar `-c safe.directory=<repo>` em toda chamada Git que opere dentro de repositorio local.
+23. Quando detectar repositorio embutido nao planejado, orientar normalizacao para pasta comum (remover gitlink no pai, remover `.git` interno e adicionar arquivos no pai).
+24. Antes de concluir manutencao de estrutura de projetos por empresa, atualizar e validar `C:\codes\indice-repositorios-root.json` e `C:\codes\indice-repositorios-root.md`.
+25. Quando diagnostico indicar erro de conexao, acionar scripts parametrizaveis dos skills `connect-github-gitlab` ou `connect-secondary-machine-git` antes de retentar push/pull.
+26. Sem validacao positiva de `connect-github-gitlab`, bloquear operacao remota e registrar pendencia de autenticacao na sessao/chamado.
 
 ## Scripts
 

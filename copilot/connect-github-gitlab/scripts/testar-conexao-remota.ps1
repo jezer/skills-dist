@@ -1,11 +1,12 @@
 param(
     [ValidateSet("github", "gitlab", "ambos")]
-    [string]$Host = "ambos"
+    [string]$Provider = "ambos"
 )
 
 $ErrorActionPreference = "Stop"
+$PSNativeCommandUseErrorActionPreference = $false
 
-$targets = switch ($Host) {
+$targets = switch ($Provider) {
     "github" { @("github.com") }
     "gitlab" { @("gitlab.com") }
     default { @("github.com", "gitlab.com") }
@@ -13,9 +14,9 @@ $targets = switch ($Host) {
 
 $result = @()
 foreach ($t in $targets) {
-    $out = ssh -T ("git@{0}" -f $t) 2>&1
+    $out = cmd /c ("ssh -T git@{0} 2>&1" -f $t)
     $exitCode = $LASTEXITCODE
-    $joined = ($out -join " ")
+    $joined = ($out | Out-String).Trim()
     $ok = ($joined -match "successfully authenticated|Welcome to GitLab") -or ($exitCode -eq 0)
     $result += [pscustomobject]@{
         host = $t
