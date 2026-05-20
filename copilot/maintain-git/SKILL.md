@@ -22,7 +22,7 @@ Padronizar e automatizar operacoes Git recorrentes com limites seguros.
 9. Priorizar comandos e scripts PowerShell para reduzir repeticao, manter os fluxos parametrizados e evitar reescrever sequencias soltas.
 10. Usar `C:\codes\skills\plan\gitrepositorio.md` como referencia pratica de bootstrap, publicacao e validacao de repositorio.
 11. Quando `gh` nao estiver disponivel, permitir bootstrap local e registrar a publicacao no GitHub como pendente de execucao posterior.
-12. Quando houver falha de conexao/autenticacao com GitHub/GitLab, encaminhar para `connect-github-gitlab`.
+12. Para qualquer operacao remota com GitHub/GitLab (`push`, `pull`, `fetch`, `clone`, `gh repo create`, publicacao), validar autenticacao/conectividade com `connect-github-gitlab` antes da execucao.
 13. Quando a demanda envolver configurar ou recuperar Git/SSH em segunda maquina, encaminhar para `connect-secondary-machine-git`.
 
 ## Limites
@@ -72,6 +72,7 @@ Padronizar e automatizar operacoes Git recorrentes com limites seguros.
 21. Quando detectar repositorio embutido nao planejado, orientar normalizacao para pasta comum (remover gitlink no pai, remover `.git` interno e adicionar arquivos no pai).
 22. Antes de concluir manutencao de estrutura de projetos por empresa, atualizar e validar `C:\codes\indice-repositorios-root.json` e `C:\codes\indice-repositorios-root.md`.
 23. Quando diagnostico indicar erro de conexao, acionar scripts parametrizaveis dos skills `connect-github-gitlab` ou `connect-secondary-machine-git` antes de retentar push/pull.
+24. Sem validacao positiva de `connect-github-gitlab`, bloquear operacao remota e registrar pendencia de autenticacao na sessao/chamado.
 
 ## Scripts
 

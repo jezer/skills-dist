@@ -43,10 +43,10 @@ function Sync-SkillContent {
     }
 }
 function Compare-Set {
-    param([string[]]$Source,[string[]]$Target)
+    param([string[]]$Source,[string[]]$Target,[string[]]$AllowedExtras = @())
     [pscustomobject]@{
       missing = @($Source | Where-Object { $_ -ne 'configure-machine-default-skill' -and $_ -notin $Target })
-      extras  = @($Target | Where-Object { $_ -notin $Source })
+      extras  = @($Target | Where-Object { $_ -notin $Source -and $_ -notin $AllowedExtras })
     }
 }
 
@@ -100,7 +100,7 @@ $cmpGemini = Compare-Set -Source $oficiaisNames -Target $geminiNames
 $cmpCopilot = Compare-Set -Source $oficiaisNames -Target $copilotNames
 $cmpClaude = Compare-Set -Source $oficiaisNames -Target $claudeNames
 $cmpCodex = Compare-Set -Source $oficiaisNames -Target $codexNames
-$cmpCodexGlobal = Compare-Set -Source $oficiaisNames -Target $codexGlobalNames
+$cmpCodexGlobal = Compare-Set -Source $oficiaisNames -Target $codexGlobalNames -AllowedExtras @('usar-codes-agents')
 
 $bridgeSkillMd = Join-Path $CodexBridgeRoot "SKILL.md"
 $bridgeYaml = Join-Path $CodexBridgeRoot "agents\openai.yaml"

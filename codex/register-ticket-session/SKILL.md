@@ -15,7 +15,7 @@ Criar a referencia inicial de uma sessao pendente para um chamado ativo.
 2. Quando o usuario chamar `ctrl_chamados`, considerar esta skill junto com `C:\codes\tools\chamados` e `maintain-tickets`.
 3. Quando o usuario chamar `root`, consultar `C:\codes\AGENTS.md`.
 
-## Fluxo
+## Fluxo — Abertura de sessao
 
 1. Ler `C:\codes\AGENTS.md`.
 2. Ler `C:\codes\tools\chamados\AGENTS.md`.
@@ -23,28 +23,35 @@ Criar a referencia inicial de uma sessao pendente para um chamado ativo.
 4. Converter o chamado para `tools/chamados/chamados/{empresa}/{usuario}/{ano}/{sequencial}/`.
 5. Ler `chamado.md`.
 6. Definir o proximo `NNN` listando `sessoes/pendentes/*.md` e `sessoes/feitas/*.md`.
-7. Criar apenas `sessoes/pendentes/NNN.md`.
-8. Nao registrar resultado final nesta skill.
-9. Para registro mecanico, usar `scripts/registrar-sessao.ps1`.
+7. Criar `sessoes/pendentes/NNN.md` com resumo inicial e campos de roteamento.
+8. Para abertura mecanica, usar `scripts/registrar-sessao.ps1`.
+
+## Fluxo — Conclusao de sessao (gate obrigatorio antes de fechar chamado)
+
+1. Verificar se existe arquivo em `sessoes/pendentes/`.
+2. Se existir: mover para `sessoes/feitas/NNN.md` com resumo completo do trabalho realizado.
+3. Se nao existir: criar diretamente em `sessoes/feitas/NNN.md` com resumo retroativo.
+4. Somente apos sessao em `feitas/` confirmada: liberar conclusao do chamado (Status: concluido).
+5. Para conclusao mecanica, usar `scripts/concluir-sessao.ps1`.
 
 ## Regras
 
-1. Criar a referencia pendente no inicio do trabalho.
-2. Nao criar arquivo unico `sessoes.md`.
-3. Nao registrar em `C:\codes\pv\sessoes.md` nem em arquivo unico `sessoes.md`.
-4. Preservar sessoes existentes.
-5. Nao renumerar sessoes antigas.
-6. Ao concluir a atividade, a skill executora deve completar e mover o arquivo para `sessoes/feitas/NNN.md`.
+1. Criar referencia pendente no inicio do trabalho.
+2. Concluir sessao (feita) obrigatoriamente antes de fechar o chamado.
+3. Nao criar arquivo unico `sessoes.md`.
+4. Preservar sessoes existentes; nao renumerar.
+5. Resumo da sessao feita deve cobrir o trabalho efetivamente realizado, nao apenas a intencao inicial.
 
 ## Limites
 
 1. Nao criar chamado novo.
-2. Nao mover sessao para `feitas`.
-3. Nao escrever historico completo no registro pendente.
+2. Nao escrever historico completo no registro pendente.
+3. Nao fechar chamado sem sessao em `sessoes/feitas/`.
 
 ## Scripts
 
-1. `scripts/registrar-sessao.ps1`: cria o proximo arquivo em `sessoes/pendentes/NNN.md` para o chamado informado; usar `-Json` quando a chamada vier de CLI que precise parsear a saida.
+1. `scripts/registrar-sessao.ps1`: cria `sessoes/pendentes/NNN.md` para o chamado informado.
+2. `scripts/concluir-sessao.ps1`: move pendente para `sessoes/feitas/NNN.md` (ou cria feita diretamente se nao houver pendente) com resumo e hash; use antes de concluir o chamado.
 
 
 

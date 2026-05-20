@@ -30,6 +30,55 @@ Apoiar investigacao tecnica e correcao de queries Redshift com rastreabilidade d
 5. Validar output por amostra controlada com casos de negocio informados.
 
 
+## Executor padrao SYG (contexto syg)
+
+No contexto `syg`, usar o executor em `C:\codes\syg\redshift` para rodar queries com rastreabilidade.
+
+### Chamada rapida via wrapper PowerShell
+
+```powershell
+# dry-run (valida sem conectar)
+.\scripts\run-redshift-query.ps1 -Profile test -DryRun
+
+# executar query e salvar resultado
+.\scripts\run-redshift-query.ps1 -Profile test -QueryFile queries/smoke_test.sql -SaveResults
+
+# diagnostico de rede
+.\scripts\run-redshift-query.ps1 -Profile test -Diagnostic
+```
+
+### Parametros aceitos
+
+| Parametro | Valores | Padrao |
+|---|---|---|
+| `-Profile` | `dev`, `test`, `prod` | `test` |
+| `-QueryFile` | caminho relativo ao projeto | `queries/smoke_test.sql` |
+| `-ConfigFile` | caminho JSON de perfis | secrets privados em `pv/particular` |
+| `-SaveResults` | flag | off |
+| `-DryRun` | flag | off |
+| `-Diagnostic` | flag | off |
+
+### Saida JSON (modo execute)
+
+```json
+{
+  "status": "ok",
+  "profile": "test",
+  "executed_at": "2026-05-19T10:00:00",
+  "elapsed_ms": 123.45,
+  "rows_preview_count": 2,
+  "columns": ["col1", "col2"],
+  "rows_preview": [["v1", "v2"]],
+  "saved_to": "results/20260519_100000_test_smoke_test.json"
+}
+```
+
+### Limites de integracao
+
+1. Executor limitado ao contexto `syg` — nao usar para outros projetos sem plano proprio.
+2. Nao gravar credenciais em arquivos de resultado.
+3. Perfil `prod` somente com atividade aprovada e plano registrado.
+
 ## Correlacao Obrigatoria de Skills
 
 1. Antes de qualquer mudanca persistente, executar `route-skills-by-context`.

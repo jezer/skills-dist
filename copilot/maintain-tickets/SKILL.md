@@ -29,6 +29,7 @@ Criar, localizar, validar ou corrigir o chamado ativo quando ele nao estiver obj
 4. Se a manutencao ficar repetitiva ou extensa, criar script auxiliar em `scripts/`.
 5. Nao registrar sessao pendente; isso pertence a `register-ticket-session`.
 6. Nao criar, editar ou validar arquivo de plano diretamente; qualquer plano deve ser criado e mantido por `maintain-planner`.
+7. Nao alterar Status do chamado para `concluido` sem verificar que existe ao menos um arquivo em `sessoes/feitas/`.
 
 ## Fluxo
 
@@ -42,6 +43,7 @@ Criar, localizar, validar ou corrigir o chamado ativo quando ele nao estiver obj
 8. Para criar chamado novo de forma mecanica, usar `scripts/novo-chamado.ps1`.
 9. Imediatamente apos criar novo chamado, executar `route-skills-by-context` como primeiro passo obrigatorio antes de qualquer outra mudanca persistente.
 10. Registrar a sessao inicial do chamado com `register-ticket-session`, preenchendo `route-skills-by-context` como skill executora inicial.
+11. Ao concluir chamado (Status: concluido): verificar se existe arquivo em `sessoes/feitas/`; se nao existir, acionar `register-ticket-session` (`scripts/concluir-sessao.ps1`) antes de alterar o status.
 
 ## Regras
 
