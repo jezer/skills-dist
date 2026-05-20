@@ -1,11 +1,24 @@
 param(
     [string]$WorkspaceRoot = "C:\codes",
-    [string[]]$Empresas = @("pv", "syg", "cnu", "theo", "elohim", "skills", "tools")
+    [string[]]$Empresas = @("pv", "syg", "cnu", "theo", "elohim", "skills", "tools"),
+    [string]$MachineTag = ""
 )
 
 $ErrorActionPreference = "Stop"
 
-$jsonPath = Join-Path $WorkspaceRoot "indice-repositorios-root.json"
+if (-not $MachineTag) {
+    $customPath = Join-Path $WorkspaceRoot "personalizado.md"
+    if (Test-Path -LiteralPath $customPath) {
+        $raw = Get-Content -LiteralPath $customPath -Raw
+        if ($raw -match "Usuario atual:\s*([a-zA-Z0-9_-]+)") { $MachineTag = $Matches[1].ToLowerInvariant() }
+    }
+    if (-not $MachineTag) { $MachineTag = $env:USERNAME.ToLowerInvariant() }
+}
+
+$jsonPath = Join-Path $WorkspaceRoot ("indice-repositorios-root-{0}.json" -f $MachineTag)
+if (-not (Test-Path -LiteralPath $jsonPath)) {
+    $jsonPath = Join-Path $WorkspaceRoot "indice-repositorios-root.json"
+}
 if (-not (Test-Path -LiteralPath $jsonPath)) {
     throw "Indice nao encontrado: $jsonPath"
 }

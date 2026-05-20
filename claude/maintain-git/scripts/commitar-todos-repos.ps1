@@ -1,5 +1,5 @@
 param(
-    [string]$IndexPath = "C:\codes\indice-repositorios-root.json",
+    [string]$IndexPath = "",
     [string]$Mensagem = "ops(git): sync, commit e push em lote pelo indice",
     [switch]$Sync = $true,
     [switch]$Push = $true,
@@ -10,6 +10,24 @@ param(
 
 $ErrorActionPreference = "Stop"
 
+function Resolve-IndexPath {
+    param([string]$ProvidedPath)
+    if ($ProvidedPath) { return $ProvidedPath }
+
+    $workspace = "C:\codes"
+    $machineTag = ""
+    $customPath = Join-Path $workspace "personalizado.md"
+    if (Test-Path -LiteralPath $customPath) {
+        $raw = Get-Content -LiteralPath $customPath -Raw
+        if ($raw -match "Usuario atual:\s*([a-zA-Z0-9_-]+)") { $machineTag = $Matches[1].ToLowerInvariant() }
+    }
+    if (-not $machineTag) { $machineTag = $env:USERNAME.ToLowerInvariant() }
+
+    $byMachine = Join-Path $workspace ("indice-repositorios-root-{0}.json" -f $machineTag)
+    if (Test-Path -LiteralPath $byMachine) { return $byMachine }
+    return (Join-Path $workspace "indice-repositorios-root.json")
+}
+
 function Invoke-GitSafe {
     param(
         [Parameter(Mandatory = $true)][string]$RepoPath,
@@ -18,6 +36,7 @@ function Invoke-GitSafe {
     & git "-c" "safe.directory=$RepoPath" @GitArgs
 }
 
+$IndexPath = Resolve-IndexPath -ProvidedPath $IndexPath
 if (-not (Test-Path -LiteralPath $IndexPath)) {
     throw "Indice nao encontrado: $IndexPath"
 }

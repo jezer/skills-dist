@@ -2,10 +2,23 @@ param(
     [string]$WorkspaceRoot = "C:\codes",
     [string]$TicketId = "",
     [string[]]$Empresas = @("pv", "syg", "cnu", "theo", "elohim", "skills", "tools"),
-    [switch]$JsonOnly
+    [switch]$JsonOnly,
+    [switch]$WriteLegacyAlias
 )
 
 $ErrorActionPreference = "Stop"
+
+function Get-MachineTag {
+    param([string]$Workspace)
+    $customPath = Join-Path $Workspace "personalizado.md"
+    if (Test-Path -LiteralPath $customPath) {
+        $raw = Get-Content -LiteralPath $customPath -Raw
+        if ($raw -match "Usuario atual:\s*([a-zA-Z0-9_-]+)") {
+            return $Matches[1].ToLowerInvariant()
+        }
+    }
+    return $env:USERNAME.ToLowerInvariant()
+}
 
 function Get-RepoInfo {
     param(
@@ -145,11 +158,12 @@ $jsonObj = [pscustomobject]@{
     companies = $companies
 }
 
-$jsonPath = Join-Path $WorkspaceRoot "indice-repositorios-root.json"
+$machineTag = Get-MachineTag -Workspace $WorkspaceRoot
+$jsonPath = Join-Path $WorkspaceRoot ("indice-repositorios-root-{0}.json" -f $machineTag)
 $jsonObj | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $jsonPath -Encoding UTF8
 
 if (-not $JsonOnly) {
-    $mdPath = Join-Path $WorkspaceRoot "indice-repositorios-root.md"
+    $mdPath = Join-Path $WorkspaceRoot ("indice-repositorios-root-{0}.md" -f $machineTag)
     $naoSync = @()
     foreach ($c in $companies) {
         foreach ($p in $c.projects) {
@@ -183,9 +197,17 @@ if (-not $JsonOnly) {
     Set-Content -LiteralPath $mdPath -Value ($lines -join "`r`n") -Encoding UTF8
 }
 
+if ($WriteLegacyAlias) {
+    Copy-Item -LiteralPath $jsonPath -Destination (Join-Path $WorkspaceRoot "indice-repositorios-root.json") -Force
+    if (-not $JsonOnly) {
+        Copy-Item -LiteralPath $mdPath -Destination (Join-Path $WorkspaceRoot "indice-repositorios-root.md") -Force
+    }
+}
+
 [pscustomobject]@{
+    MachineTag = $machineTag
     JsonPath = $jsonPath
-    MarkdownPath = (Join-Path $WorkspaceRoot "indice-repositorios-root.md")
+    MarkdownPath = (Join-Path $WorkspaceRoot ("indice-repositorios-root-{0}.md" -f $machineTag))
     Companies = $jsonObj.companies_total
     Projects = $jsonObj.projects_total
     GitRepos = $jsonObj.git_repos_total

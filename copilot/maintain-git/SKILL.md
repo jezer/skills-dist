@@ -71,7 +71,7 @@ Padronizar e automatizar operacoes Git recorrentes com limites seguros.
 21. Quando houver warnings de `LF -> CRLF`, aplicar `padronizar-eol.ps1` para gravar `.gitattributes` e, quando necessario, renormalizar o repositorio.
 22. Em scripts ou comandos soltos desta skill, aplicar `-c safe.directory=<repo>` em toda chamada Git que opere dentro de repositorio local.
 23. Quando detectar repositorio embutido nao planejado, orientar normalizacao para pasta comum (remover gitlink no pai, remover `.git` interno e adicionar arquivos no pai).
-24. Antes de concluir manutencao de estrutura de projetos por empresa, atualizar e validar `C:\codes\indice-repositorios-root.json` e `C:\codes\indice-repositorios-root.md`.
+24. Antes de concluir manutencao de estrutura de projetos por empresa, atualizar e validar o indice por maquina em `C:\codes\indice-repositorios-root-<usuario>.json` e `C:\codes\indice-repositorios-root-<usuario>.md` (usuario lido de `C:\codes\personalizado.md`).
 25. Quando diagnostico indicar erro de conexao, acionar scripts parametrizaveis dos skills `connect-github-gitlab` ou `connect-secondary-machine-git` antes de retentar push/pull.
 26. Sem validacao positiva de `connect-github-gitlab`, bloquear operacao remota e registrar pendencia de autenticacao na sessao/chamado.
 
@@ -89,7 +89,7 @@ Padronizar e automatizar operacoes Git recorrentes com limites seguros.
 10. `git-convencoes.md`: arquivo raiz padrao gerado para registrar nome do repositorio, `BasePath`, regras de branch, regras de commit e orientacoes minimas de bootstrap.
 11. `C:\codes\skills\plan\gitrepositorio.md`: referencia pratica de comandos e exemplos de bootstrap Git e GitHub.
 12. `scripts/detectar-modelo-repositorio.ps1`: identifica o modelo de repositorio pelo `git-convencoes.md`.
-13. `scripts/commitar-todos-repos.ps1`: usa o `indice-repositorios-root.json` para executar em lote, por padrao, `sync + commit + push` juntos nos repositorios Git habilitados, incluindo a entrada `root/codes-root` quando presente.
+13. `scripts/commitar-todos-repos.ps1`: usa por padrao o indice por maquina `indice-repositorios-root-<usuario>.json` (com fallback para legado) para executar em lote `sync + commit + push` juntos nos repositorios Git habilitados, incluindo a entrada `root/codes-root` quando presente.
 
 ## Convencoes locais
 
