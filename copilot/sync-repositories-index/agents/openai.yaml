@@ -1,5 +1,5 @@
 name: sync-repositories-index
 description: Atualizar e validar indice de repositorios do root.
 instructions:
-  default_prompt: "Use $sync-repositories-index para regenerar e validar C:\\codes\\indice-repositorios-root.json e C:\\codes\\indice-repositorios-root.md quando houver mudancas de empresa/projeto/repositorio."
+  default_prompt: "Use $sync-repositories-index para regenerar e validar o indice por maquina C:\\codes\\indice-repositorios-root-<usuario>.json e .md (usuario lido de C:\\codes\\personalizado.md, ex.: jz/jf), evitando conflitos entre maquinas."
 
