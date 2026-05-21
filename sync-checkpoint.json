@@ -1,5 +1,5 @@
 ﻿{
-    "generated_at":  "2026-05-21T12:21:48",
+    "generated_at":  "2026-05-21T00:53:20",
     "mode":  "apply",
     "processed":  [
                       "maintain-activities",
@@ -11,12 +11,7 @@
                       "powershell-specialist",
                       "python-specialist",
                       "redshift-sql-specialist",
-                      "architecture-diagrammer",
-                      "presentation-designer",
                       "semaforo-cabecalho",
-                      "technical-writer",
-                      "ui-infographic-generator",
-                      "visual-storytelling",
                       "cloudinformation-aws",
                       "databricks-notebook-pattern",
                       "syg-cloudformation-aws",
@@ -35,6 +30,7 @@
                       "sincronizar-indice-repositorios",
                       "sync-repositories-index"
                   ],
-    "total_processed":  32,
+    "total_processed":  27,
     "completed":  true
 }
+

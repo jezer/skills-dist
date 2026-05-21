@@ -1,14 +1,18 @@
 ﻿{
-    "generated_at":  "2026-05-21T12:21:48",
-    "apply":  true,
-    "skills_oficiais":  33,
+    "generated_at":  "2026-05-21T01:03:47",
+    "apply":  false,
+    "skills_oficiais":  28,
     "gemini":  {
                    "total":  31,
                    "missing":  [
 
                                ],
                    "extras":  [
-
+                                  "architecture-diagrammer",
+                                  "presentation-designer",
+                                  "technical-writer",
+                                  "ui-infographic-generator",
+                                  "visual-storytelling"
                               ]
                },
     "copilot":  {
@@ -17,7 +21,11 @@
 
                                 ],
                     "extras":  [
-
+                                   "architecture-diagrammer",
+                                   "presentation-designer",
+                                   "technical-writer",
+                                   "ui-infographic-generator",
+                                   "visual-storytelling"
                                ]
                 },
     "claude":  {
@@ -26,7 +34,11 @@
 
                                ],
                    "extras":  [
-
+                                  "architecture-diagrammer",
+                                  "presentation-designer",
+                                  "technical-writer",
+                                  "ui-infographic-generator",
+                                  "visual-storytelling"
                               ]
                },
     "codex":  {
@@ -35,11 +47,15 @@
 
                               ],
                   "extras":  [
-
+                                 "architecture-diagrammer",
+                                 "presentation-designer",
+                                 "technical-writer",
+                                 "ui-infographic-generator",
+                                 "visual-storytelling"
                              ]
               },
     "codex_global":  {
-                         "total":  32,
+                         "total":  27,
                          "missing":  [
 
                                      ],
@@ -53,3 +69,4 @@
                                  ],
     "checkpoint_path":  "C:\\codes\\skills\\dist\\sync-checkpoint.json"
 }
+
