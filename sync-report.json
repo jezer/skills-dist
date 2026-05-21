@@ -1,55 +1,50 @@
 ﻿{
-    "generated_at":  "2026-05-21T20:13:02",
+    "generated_at":  "2026-05-21T20:57:10",
     "apply":  true,
-    "skills_oficiais":  35,
+    "skills_oficiais":  36,
     "gemini":  {
-                   "total":  35,
+                   "total":  34,
                    "missing":  [
 
                                ],
                    "extras":  [
-                                  "auditar-cartao-pix-juros",
-                                  "montar-dossie-contestacao-bancaria"
+
                               ]
                },
     "copilot":  {
-                    "total":  35,
+                    "total":  34,
                     "missing":  [
 
                                 ],
                     "extras":  [
-                                   "auditar-cartao-pix-juros",
-                                   "montar-dossie-contestacao-bancaria"
+
                                ]
                 },
     "claude":  {
-                   "total":  35,
+                   "total":  34,
                    "missing":  [
 
                                ],
                    "extras":  [
-                                  "auditar-cartao-pix-juros",
-                                  "montar-dossie-contestacao-bancaria"
+
                               ]
                },
     "codex":  {
-                  "total":  35,
+                  "total":  34,
                   "missing":  [
 
                               ],
                   "extras":  [
-                                 "auditar-cartao-pix-juros",
-                                 "montar-dossie-contestacao-bancaria"
+
                              ]
               },
     "codex_global":  {
-                         "total":  36,
+                         "total":  35,
                          "missing":  [
 
                                      ],
                          "extras":  [
-                                        "auditar-cartao-pix-juros",
-                                        "montar-dossie-contestacao-bancaria"
+
                                     ]
                      },
     "codex_bridge_ok":  true,

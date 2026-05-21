@@ -1,0 +1,4 @@
+﻿interface:
+  display_name: "Semaforo Container Partner Pattern"
+  short_description: "Padroniza estrutura de implantacao"
+  default_prompt: "Use $semaforo-container-partner-pattern para aplicar o padrao de estrutura do cabecalho Semaforo em containers."
