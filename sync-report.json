@@ -1,9 +1,9 @@
 ﻿{
-    "generated_at":  "2026-05-21T00:17:49",
+    "generated_at":  "2026-05-21T11:18:23",
     "apply":  true,
-    "skills_oficiais":  31,
+    "skills_oficiais":  33,
     "gemini":  {
-                   "total":  30,
+                   "total":  31,
                    "missing":  [
 
                                ],
@@ -12,7 +12,7 @@
                               ]
                },
     "copilot":  {
-                    "total":  30,
+                    "total":  31,
                     "missing":  [
 
                                 ],
@@ -21,7 +21,7 @@
                                ]
                 },
     "claude":  {
-                   "total":  30,
+                   "total":  31,
                    "missing":  [
 
                                ],
@@ -30,7 +30,7 @@
                               ]
                },
     "codex":  {
-                  "total":  30,
+                  "total":  31,
                   "missing":  [
 
                               ],
@@ -39,7 +39,7 @@
                              ]
               },
     "codex_global":  {
-                         "total":  31,
+                         "total":  32,
                          "missing":  [
 
                                      ],
