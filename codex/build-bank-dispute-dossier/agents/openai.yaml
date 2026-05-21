@@ -1,0 +1,4 @@
+﻿interface:
+  display_name: "Build Bank Dispute Dossier"
+  short_description: "Builds formal dispute dossier"
+  default_prompt: "Use $build-bank-dispute-dossier to consolidate a technical bank dispute package from financial audit evidence."

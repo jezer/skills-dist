@@ -1,4 +1,0 @@
-﻿interface:
-  display_name: "Auditar Cartao PIX Juros"
-  short_description: "Audita PIX, juros e taxas de cartao"
-  default_prompt: "Use $auditar-cartao-pix-juros para investigar cobrancas de cartao e extrato com evidencias tecnicas."

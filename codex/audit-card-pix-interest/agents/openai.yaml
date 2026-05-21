@@ -1,0 +1,4 @@
+﻿interface:
+  display_name: "Audit Card PIX Interest"
+  short_description: "Audits PIX, interest and card fees"
+  default_prompt: "Use $audit-card-pix-interest to investigate card and statement charges with technical evidence."

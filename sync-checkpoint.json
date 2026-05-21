@@ -1,5 +1,5 @@
 ﻿{
-    "generated_at":  "2026-05-21T19:36:41",
+    "generated_at":  "2026-05-21T20:13:02",
     "mode":  "apply",
     "processed":  [
                       "maintain-activities",
@@ -23,14 +23,14 @@
                       "syg-rebates-parameterization",
                       "syg-unit-test-specialist",
                       "syg-workflows-user-zone",
-                      "auditar-cartao-pix-juros",
+                      "audit-card-pix-interest",
+                      "build-bank-dispute-dossier",
                       "connect-github-gitlab",
                       "connect-secondary-machine-git",
                       "maintain-agents",
                       "maintain-filesystem",
                       "maintain-git",
                       "maintain-tickets",
-                      "montar-dossie-contestacao-bancaria",
                       "register-ticket-session",
                       "sincronizar-indice-repositorios",
                       "maintain-automations",

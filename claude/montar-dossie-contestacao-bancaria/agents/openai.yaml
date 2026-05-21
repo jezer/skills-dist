@@ -1,4 +1,0 @@
-﻿interface:
-  display_name: "Montar Dossie Contestacao Bancaria"
-  short_description: "Monta dossie e textos formais"
-  default_prompt: "Use $montar-dossie-contestacao-bancaria para consolidar contestacao tecnica com base em auditoria financeira."
