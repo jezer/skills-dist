@@ -1,61 +1,45 @@
 ﻿{
-    "generated_at":  "2026-05-21T01:03:47",
-    "apply":  false,
-    "skills_oficiais":  28,
+    "generated_at":  "2026-05-21T19:36:41",
+    "apply":  true,
+    "skills_oficiais":  35,
     "gemini":  {
-                   "total":  31,
+                   "total":  33,
                    "missing":  [
 
                                ],
                    "extras":  [
-                                  "architecture-diagrammer",
-                                  "presentation-designer",
-                                  "technical-writer",
-                                  "ui-infographic-generator",
-                                  "visual-storytelling"
+
                               ]
                },
     "copilot":  {
-                    "total":  31,
+                    "total":  33,
                     "missing":  [
 
                                 ],
                     "extras":  [
-                                   "architecture-diagrammer",
-                                   "presentation-designer",
-                                   "technical-writer",
-                                   "ui-infographic-generator",
-                                   "visual-storytelling"
+
                                ]
                 },
     "claude":  {
-                   "total":  31,
+                   "total":  33,
                    "missing":  [
 
                                ],
                    "extras":  [
-                                  "architecture-diagrammer",
-                                  "presentation-designer",
-                                  "technical-writer",
-                                  "ui-infographic-generator",
-                                  "visual-storytelling"
+
                               ]
                },
     "codex":  {
-                  "total":  31,
+                  "total":  33,
                   "missing":  [
 
                               ],
                   "extras":  [
-                                 "architecture-diagrammer",
-                                 "presentation-designer",
-                                 "technical-writer",
-                                 "ui-infographic-generator",
-                                 "visual-storytelling"
+
                              ]
               },
     "codex_global":  {
-                         "total":  27,
+                         "total":  34,
                          "missing":  [
 
                                      ],
@@ -69,4 +53,3 @@
                                  ],
     "checkpoint_path":  "C:\\codes\\skills\\dist\\sync-checkpoint.json"
 }
-

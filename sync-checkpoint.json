@@ -1,5 +1,5 @@
 ﻿{
-    "generated_at":  "2026-05-21T00:53:20",
+    "generated_at":  "2026-05-21T19:36:41",
     "mode":  "apply",
     "processed":  [
                       "maintain-activities",
@@ -11,26 +11,32 @@
                       "powershell-specialist",
                       "python-specialist",
                       "redshift-sql-specialist",
+                      "architecture-diagrammer",
+                      "presentation-designer",
                       "semaforo-cabecalho",
+                      "technical-writer",
+                      "ui-infographic-generator",
+                      "visual-storytelling",
                       "cloudinformation-aws",
                       "databricks-notebook-pattern",
                       "syg-cloudformation-aws",
                       "syg-rebates-parameterization",
                       "syg-unit-test-specialist",
                       "syg-workflows-user-zone",
+                      "auditar-cartao-pix-juros",
                       "connect-github-gitlab",
                       "connect-secondary-machine-git",
                       "maintain-agents",
                       "maintain-filesystem",
                       "maintain-git",
                       "maintain-tickets",
+                      "montar-dossie-contestacao-bancaria",
                       "register-ticket-session",
                       "sincronizar-indice-repositorios",
                       "maintain-automations",
                       "sincronizar-indice-repositorios",
                       "sync-repositories-index"
                   ],
-    "total_processed":  27,
+    "total_processed":  34,
     "completed":  true
 }
-
