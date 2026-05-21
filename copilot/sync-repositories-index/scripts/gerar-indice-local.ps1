@@ -24,10 +24,17 @@ function Get-MachineTag {
 function Get-RepoInfo {
     param(
         [string]$Empresa,
-        [string]$Path
+        [string]$Path,
+        [string]$NameOverride = ""
     )
 
-    $nome = if ($Empresa -eq "root") { "codes-root" } else { Split-Path -Leaf $Path }
+    $nome = if ($NameOverride) {
+        $NameOverride
+    } elseif ($Empresa -eq "root") {
+        "codes-root"
+    } else {
+        Split-Path -Leaf $Path
+    }
     $hasGit = Test-Path (Join-Path $Path ".git")
     $repoType = if ($hasGit) {
         "repo"
@@ -118,6 +125,10 @@ $allProjects = @()
 foreach ($emp in $Empresas) {
     $root = Join-Path $WorkspaceRoot $emp
     if (-not (Test-Path $root)) { continue }
+    # Detecta repo parent da empresa (ex.: C:\codes\skills\.git agrega submodulos)
+    if (Test-Path (Join-Path $root ".git")) {
+        $allProjects += Get-RepoInfo -Empresa $emp -Path $root -NameOverride ("{0}-root" -f $emp)
+    }
     $dirs = Get-ChildItem -LiteralPath $root -Directory -ErrorAction SilentlyContinue
     foreach ($d in $dirs) {
         $allProjects += Get-RepoInfo -Empresa $emp -Path $d.FullName
