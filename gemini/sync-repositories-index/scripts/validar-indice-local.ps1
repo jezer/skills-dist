@@ -51,6 +51,7 @@ foreach ($p in $detected) {
 $inexistentesNoDisco = @()
 foreach ($c in $idx.companies) {
     foreach ($p in $c.projects) {
+        if ($p.repo_type -eq "externo") { continue }
         if (-not (Test-Path -LiteralPath $p.path)) {
             $inexistentesNoDisco += $p.path
         }

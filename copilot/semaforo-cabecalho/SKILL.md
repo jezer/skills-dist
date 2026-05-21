@@ -1,6 +1,6 @@
-﻿---
+---
 name: semaforo-cabecalho
-description: Gerencia o framework Semaforo v3 â€” atualizar codigo-fonte, regenerar parquet, versionar e deployar o cabecalho Delta no Databricks. Usar quando alterar libs do framework, criar nova versao, resolver colisao de ordens, ou orientar o fluxo de deploy local -> Volumes -> tabela Delta -> loader.
+description: Gerencia o framework Semaforo v3 — atualizar codigo-fonte, regenerar parquet, versionar e deployar o cabecalho Delta no Databricks. Usar quando alterar libs do framework, criar nova versao, resolver colisao de ordens, ou orientar o fluxo de deploy local -> Volumes -> tabela Delta -> loader.
 ---
 
 # Semaforo Cabecalho
@@ -47,13 +47,13 @@ C:\codes\pv\semaforo\plan\ativo\referencias\python\
 
 - `ordem = ordem_base * 10` para o bloco de imports do modulo.
 - Cada classe/funcao seguinte recebe `ordem_base * 10 + i + 1`.
-- `createobj` (ordem_base=9) gera ate ordem 102 (13 definicoes) â€” proximo modulo deve ter ordem_base >= 11.
+- `createobj` (ordem_base=9) gera ate ordem 102 (13 definicoes) — proximo modulo deve ter ordem_base >= 11.
 - Ordens atuais: dmldetect=1, dtAt=2, ctx=3, tabbasic=4, tabver=5, tbstruct=6, env=7, semafbase=8, createobj=9, skphelp=15, monit=20, execmultfunc=25, cabecalho=30, init=1000-1003.
 - Ao adicionar modulo novo, verificar colisao: `ordem_base * 10` nao pode cair dentro de `[prev_base*10, prev_base*10 + num_defs_prev]`.
 
 ## Imports relativos
 
-Codigo exec'd fora de pacote â€” `from .x import y` sao removidos automaticamente por `remover_imports_relativos()`. Todas as classes ficam no mesmo `globals()` e se enxergam diretamente.
+Codigo exec'd fora de pacote — `from .x import y` sao removidos automaticamente por `remover_imports_relativos()`. Todas as classes ficam no mesmo `globals()` e se enxergam diretamente.
 
 ## Blocos init (ordens 1000-1003)
 
@@ -80,4 +80,3 @@ Executados por ultimo, dependem de todas as classes ja definidas:
 
 1. `MANUAL.md`: fluxo completo de deploy e rollback.
 2. `DEPLOY.md`: analise das opcoes de instalacao (A/B/C/D) e justificativa da escolha D.
-

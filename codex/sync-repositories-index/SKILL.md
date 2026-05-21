@@ -13,8 +13,9 @@ Manter o indice de repositorios do root consistente com o estado local da maquin
 
 1. Usar quando houver nova empresa, novo projeto ou mudanca de repositorio.
 2. Usar para regenerar os arquivos por maquina `C:\codes\indice-repositorios-root-<usuario>.json` e `C:\codes\indice-repositorios-root-<usuario>.md`, com `<usuario>` lido de `C:\codes\personalizado.md` (ex.: `jz`, `jf`).
-3. Usar para validar se o indice local esta atualizado.
-4. Sempre incluir o repositorio raiz `C:\codes` no indice como entrada do contexto `root`.
+3. Ao gerar o indice da maquina atual, incorporar referencias de outros arquivos `indice-repositorios-root-*.json` para nao perder repositorios criados em outra maquina.
+4. Usar para validar se o indice local esta atualizado.
+5. Sempre incluir o repositorio raiz `C:\codes` no indice como entrada do contexto `root`.
 
 ## Limites
 

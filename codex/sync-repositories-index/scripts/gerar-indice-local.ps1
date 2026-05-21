@@ -3,7 +3,8 @@ param(
     [string]$TicketId = "",
     [string[]]$Empresas = @("pv", "syg", "cnu", "theo", "elohim", "skills", "tools"),
     [switch]$JsonOnly,
-    [switch]$WriteLegacyAlias
+    [switch]$WriteLegacyAlias,
+    [switch]$IncludePeerMachineIndexes = $true
 )
 
 $ErrorActionPreference = "Stop"
@@ -112,6 +113,7 @@ function Get-RepoInfo {
     }
 }
 
+$machineTag = Get-MachineTag -Workspace $WorkspaceRoot
 $allProjects = @()
 foreach ($emp in $Empresas) {
     $root = Join-Path $WorkspaceRoot $emp
@@ -124,6 +126,45 @@ foreach ($emp in $Empresas) {
 
 # Inclui explicitamente o repositorio raiz do workspace no indice.
 $allProjects += Get-RepoInfo -Empresa "root" -Path $WorkspaceRoot
+
+if ($IncludePeerMachineIndexes) {
+    $knownPaths = @{}
+    foreach ($p in $allProjects) { $knownPaths[$p.path.ToLowerInvariant()] = $true }
+
+    $peerFiles = Get-ChildItem -LiteralPath $WorkspaceRoot -File -Filter "indice-repositorios-root-*.json" -ErrorAction SilentlyContinue |
+        Where-Object { $_.Name -ne ("indice-repositorios-root-{0}.json" -f $machineTag) }
+
+    foreach ($pf in $peerFiles) {
+        try {
+            $peerTag = [System.IO.Path]::GetFileNameWithoutExtension($pf.Name) -replace '^indice-repositorios-root-', ''
+            $peer = Get-Content -Raw -LiteralPath $pf.FullName | ConvertFrom-Json
+            foreach ($c in $peer.companies) {
+                foreach ($pp in $c.projects) {
+                    $k = $pp.path.ToLowerInvariant()
+                    if ($knownPaths.ContainsKey($k)) { continue }
+                    $knownPaths[$k] = $true
+                    $allProjects += [pscustomobject]@{
+                        company = $c.name
+                        project_name = $pp.project_name
+                        path = $pp.path
+                        repo_type = "externo"
+                        has_git = $false
+                        default_branch = $pp.default_branch
+                        tracking_branch = $pp.tracking_branch
+                        remotes = $pp.remotes
+                        clone_urls = $pp.clone_urls
+                        last_commit = $pp.last_commit
+                        status_short = "externo:$peerTag"
+                        risk_level = "atencao"
+                        notes = "repositorio referenciado de outra maquina ($peerTag); avaliar clone local"
+                        sync_enabled = $false
+                        sync_block_reason = "referencia externa de outra maquina"
+                    }
+                }
+            }
+        } catch {}
+    }
+}
 
 $companies = @()
 foreach ($emp in $Empresas) {
@@ -158,7 +199,6 @@ $jsonObj = [pscustomobject]@{
     companies = $companies
 }
 
-$machineTag = Get-MachineTag -Workspace $WorkspaceRoot
 $jsonPath = Join-Path $WorkspaceRoot ("indice-repositorios-root-{0}.json" -f $machineTag)
 $jsonObj | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $jsonPath -Encoding UTF8
 

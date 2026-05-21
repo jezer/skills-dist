@@ -1,13 +1,13 @@
-﻿---
+---
 name: databricks-notebook-pattern
-description: Cria e revisa notebooks Databricks seguindo a arquitetura padrao do ambiente â€” cabecalho Semaforo, declaracao de dependencias, padroes de carga incremental (MERGE) e full (INSERT), finalizacao com lib_normalizar. Usar sempre que criar um notebook novo ou revisar conformidade de existente com o padrao da plataforma.
+description: Cria e revisa notebooks Databricks seguindo a arquitetura padrao do ambiente — cabecalho Semaforo, declaracao de dependencias, padroes de carga incremental (MERGE) e full (INSERT), finalizacao com lib_normalizar. Usar sempre que criar um notebook novo ou revisar conformidade de existente com o padrao da plataforma.
 ---
 
 # Databricks Notebook Pattern
 
 ## Objetivo
 
-Garantir que notebooks Databricks sigam a arquitetura padrao do ambiente â€” estrutura de celulas, cabecalho Semaforo, declaracao de dependencias, padroes Delta e finalizacao correta.
+Garantir que notebooks Databricks sigam a arquitetura padrao do ambiente — estrutura de celulas, cabecalho Semaforo, declaracao de dependencias, padroes Delta e finalizacao correta.
 
 ## Estrutura padrao de um notebook
 
@@ -84,9 +84,9 @@ lib_normalizar.public.informar.InformarNotebookFinalizarComSucesso(
 4. Toda tabela lida deve ser declarada com `IncluirDependencia_Fonte`.
 5. Toda tabela criada/atualizada deve ser declarada com `IncluirDependencia_ObjCriado`.
 6. Ultima celula sempre `InformarNotebookFinalizarComSucesso`.
-7. `CREATE TABLE IF NOT EXISTS` com `USING delta` â€” nunca criar tabela sem o IF NOT EXISTS.
+7. `CREATE TABLE IF NOT EXISTS` com `USING delta` — nunca criar tabela sem o IF NOT EXISTS.
 8. Carga incremental usa `MERGE INTO` com chave primaria explicita.
-9. Carga full usa `INSERT INTO` â€” nunca `overwrite` em tabela Delta sem alinhamento com o time.
+9. Carga full usa `INSERT INTO` — nunca `overwrite` em tabela Delta sem alinhamento com o time.
 
 ## Variaveis disponiveis apos o cabecalho
 
@@ -109,17 +109,17 @@ Apos `%run x.cabecalho.v3.delta`, estas variaveis estao no globals():
 ## Padroes de nomenclatura de colunas
 
 Prefixos padrao ja adotados no ambiente:
-- `nr_` â€” numero (nr_Pedido, nr_Guia)
-- `cd_` â€” codigo (cd_Situacao, cd_Operadora)
-- `fl_` â€” flag/indicador boolean ou S/N (fl_Opme, fl_Sexo)
-- `id_` â€” chave surrogate de dimensao (id_TipoOrigem, id_Prestador)
-- `dt_` â€” data/timestamp (dt_Inclusao, dt_Autorizacao)
-- `nm_` â€” nome (nm_Prestador, nm_Associado)
-- `vl_` â€” valor monetario ou numerico (vl_DiariaHdc)
-- `ds_` â€” descricao textual (ds_Conselho)
-- `hr_` â€” hora (hr_Internacao)
-- `sg_` â€” sigla (sg_Conselho)
-- `uf_` â€” UF (uf_CrmSolicitante)
+- `nr_` — numero (nr_Pedido, nr_Guia)
+- `cd_` — codigo (cd_Situacao, cd_Operadora)
+- `fl_` — flag/indicador boolean ou S/N (fl_Opme, fl_Sexo)
+- `id_` — chave surrogate de dimensao (id_TipoOrigem, id_Prestador)
+- `dt_` — data/timestamp (dt_Inclusao, dt_Autorizacao)
+- `nm_` — nome (nm_Prestador, nm_Associado)
+- `vl_` — valor monetario ou numerico (vl_DiariaHdc)
+- `ds_` — descricao textual (ds_Conselho)
+- `hr_` — hora (hr_Internacao)
+- `sg_` — sigla (sg_Conselho)
+- `uf_` — UF (uf_CrmSolicitante)
 
 ## Padroes de carga incremental
 
@@ -145,7 +145,7 @@ if not _cargaFull:
 
 ## Pastas e nomenclatura de notebooks
 
-ConvenÃ§Ã£o de pastas por tipo de objeto:
+Convenção de pastas por tipo de objeto:
 ```
 container/
   A0.SETUP/           <- configuracoes e ferramentas
@@ -163,9 +163,9 @@ Nomenclatura de arquivo: `A1.trusted.CARGA_TB_NOME.py`, `A1.raw.RAW_CARGA_TB_NOM
 
 1. Nao alterar o path do cabecalho sem migrar todos os notebooks do container.
 2. Nao usar `spark.read` diretamente em tabelas sem declarar `IncluirDependencia_Fonte`.
-3. Nao usar `mode("overwrite")` em tabela Delta sem alinhamento â€” preferir MERGE ou DELETE+INSERT.
-4. Nao criar funcoes uteis inline â€” colocar em `x.tools/x.project_functions`.
-5. Nao hardcodar catalog/schema â€” sempre usar variaveis do `objparameters`.
+3. Nao usar `mode("overwrite")` em tabela Delta sem alinhamento — preferir MERGE ou DELETE+INSERT.
+4. Nao criar funcoes uteis inline — colocar em `x.tools/x.project_functions`.
+5. Nao hardcodar catalog/schema — sempre usar variaveis do `objparameters`.
 
 ## Dependencias operacionais
 
@@ -178,4 +178,3 @@ Nomenclatura de arquivo: `A1.trusted.CARGA_TB_NOME.py`, `A1.raw.RAW_CARGA_TB_NOM
 1. Container de referencia: `C:\codes\cnu\11autorizacaodiario_v2.v1.a1`
 2. Funcoes uteis de referencia: `x.tools/x.project_functions.py` no container acima
 3. Cabecalho loader: `C:\codes\pv\semaforo\cabecalho\x.Parameters\x.cabecalho.v3.delta.py`
-
