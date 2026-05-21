@@ -1,6 +1,6 @@
 ---
 name: sync-repositories-index
-description: Atualizar e validar o indice de repositorios do root em C:\codes. Use quando houver novo projeto/empresa, divergencia entre estado local e indice, ou necessidade de regenerar os arquivos por maquina (ex.: C:\codes\indice-repositorios-root-jz.json e .md).
+description: "Atualizar e validar o indice de repositorios do root em C:\\codes. Use quando houver novo projeto/empresa, divergencia entre estado local e indice, ou necessidade de regenerar os arquivos por maquina (ex.: C:\\codes\\indice-repositorios-root-jz.json e .md)."
 ---
 
 # Sincronizar Indice de Repositorios
