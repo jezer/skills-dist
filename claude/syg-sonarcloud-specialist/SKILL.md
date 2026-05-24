@@ -26,8 +26,19 @@ Resolver falhas do SonarCloud em projetos SYG com mudancas pequenas, seguras e r
 1. Ler o log de recomendacoes/falhas SonarCloud.
 2. Classificar por risco: bug potencial, padrao obrigatorio, manutencao.
 3. Corrigir primeiro itens bloqueantes do Quality Gate.
-4. Ajustar testes impactados para refletir o novo contrato tecnico.
-5. Executar testes relevantes do projeto antes de concluir.
+4. Quando houver falha de cobertura por arquivo, criar/ajustar testes do proprio modulo antes de alterar regras de gate.
+5. Ajustar testes impactados para refletir o novo contrato tecnico.
+6. Executar testes relevantes do projeto antes de concluir.
+
+## Regra de Coverage (Quality Gate)
+
+1. Tratar cobertura minima por arquivo como criterio obrigatorio de pronto.
+2. Se um arquivo estiver abaixo da meta (ex.: `> 74%`), cobrir:
+   - caminho feliz principal;
+   - erro esperado de dado/configuracao;
+   - ramificacoes de ambiente quando existirem (`AWS_REGION`, `SPARK_MASTER`).
+3. Evitar testes superficiais: asserts devem validar efeito observavel (saida, escrita, chamada externa, excecao).
+4. Nao reduzir escopo de cobertura para mascarar falha; priorizar teste real do comportamento.
 
 ## Checklist rapido (Glue + SparkSession)
 

@@ -1,6 +1,6 @@
 ---
 name: semaforo-cabecalho
-description: Gerencia o framework Semaforo v3 — atualizar codigo-fonte, regenerar parquet e versionar/deployar o cabecalho Delta no Databricks. Delega a geracao do parquet para `code-parquet-builder` via `config/semaforo.json`. Use quando alterar libs do framework, criar nova versao, resolver colisao de ordens ou orientar o fluxo de deploy local para Volumes, tabela Delta e loader.
+description: Gerencia o framework Semaforo v3 — atualizar codigo-fonte, regenerar parquet e versionar/deployar o cabecalho Delta no Databricks. A saida oficial fica unicamente em `C:\codes\pv\semaforo\cabecalho\scripts\output\`; propagacao para espelhos (cnu, etc.) e sempre manual. Delega a geracao do parquet para `code-parquet-builder` via `config/semaforo.json`. Use quando alterar libs do framework, criar nova versao, resolver colisao de ordens ou orientar o fluxo de deploy local para Volumes, tabela Delta e loader.
 ---
 
 # Semaforo Cabecalho
@@ -36,14 +36,38 @@ C:\codes\pv\semaforo\plan\ativo\referencias\python\
                      SemaforoInstaller, SemaforoApp
 ```
 
+## Saida oficial (unica fonte canonica)
+
+**O parquet/csv oficial fica em e SOMENTE em:**
+
+```
+C:\codes\pv\semaforo\cabecalho\scripts\output\
+  tb_semaforo_cabecalho_v<versao>.parquet
+  tb_semaforo_cabecalho_v<versao>.csv
+```
+
+Esse caminho e o `output_dir` declarado em `config/semaforo.json` e nao deve ser alterado. Qualquer upload ao Databricks (Volumes -> tabela Delta) parte deste diretorio.
+
+## Outputs em outros projetos (cnu, etc.)
+
+Projetos como `cnu/11autorizacaodiario.v1.a1/x.semaforo_cabecalho/x.scripts/output/` e `cnu/11autorizacaodiario_v2.v1.a1/x.semaforo_cabecalho/x.scripts/output/` **nao sao regenerados por esta skill**. Esses sao espelhos historicos. Caso um projeto consumidor precise de copia local, o usuario faz a **copia manual** do parquet/csv canonico para o destino:
+
+```
+copy C:\codes\pv\semaforo\cabecalho\scripts\output\tb_semaforo_cabecalho_v3_0.parquet  <destino>
+copy C:\codes\pv\semaforo\cabecalho\scripts\output\tb_semaforo_cabecalho_v3_0.csv      <destino>
+```
+
+Nenhum script desta skill faz essa propagacao automatica.
+
 ## Uso
 
 1. Editar fontes Python em `C:\codes\pv\semaforo\plan\ativo\referencias\python`.
-2. Rodar `scripts/regenerar-cabecalho.ps1 -Versao vX.Y` (wrapper local) — ele invoca `code-parquet-builder` com `config/semaforo.json`.
-3. Upload do parquet para `/Volumes/libs/dev/libs_dev/semaforo_cabecalho/`.
-4. Executar `x.admin.popular-tabela-cabecalho` no Databricks.
-5. Testar com notebook que faz `%run x.cabecalho.v3.delta`.
-6. Se nova versao: atualizar `_SF_VERSAO` no loader e fazer deploy.
+2. Rodar `scripts/regenerar-cabecalho.ps1 -Versao vX.Y` (wrapper local) — ele invoca `code-parquet-builder` com `config/semaforo.json` e grava no `output_dir` oficial.
+3. (Opcional) Copiar manualmente o parquet/csv para outros projetos consumidores, se necessario.
+4. Upload do parquet oficial para `/Volumes/libs/dev/libs_dev/semaforo_cabecalho/`.
+5. Executar `x.admin.popular-tabela-cabecalho` no Databricks.
+6. Testar com notebook que faz `%run x.cabecalho.v3.delta`.
+7. Se nova versao: atualizar `_SF_VERSAO` no loader e fazer deploy.
 
 ## Arquitetura de geracao
 
@@ -78,11 +102,13 @@ Executados por ultimo, dependem de todas as classes ja definidas. Definidos em `
 
 ## Limites
 
-1. Nao alterar ordens existentes de blocos sem verificar impacto nos 126+ notebooks dependentes.
-2. Nao commitar parquet/CSV no git (arquivos grandes, geraveis localmente).
-3. Nao rodar `x.admin.popular-tabela-cabecalho` em `prd` sem validar em `dev` primeiro.
-4. Nao remover bloco sem confirmar que nenhum notebook referencia o simbolo diretamente.
-5. Nao reimplementar logica de extracao AST aqui; alteracoes do motor vao em `code-parquet-builder`.
+1. **Saida unica e oficial em `C:\codes\pv\semaforo\cabecalho\scripts\output\`**. Nao redirecionar `output_dir` em `config/semaforo.json` para outro caminho.
+2. Nao propagar automaticamente o parquet/csv para outros projetos (cnu, etc.) — propagacao para espelhos e **sempre manual**.
+3. Nao alterar ordens existentes de blocos sem verificar impacto nos 126+ notebooks dependentes.
+4. Nao commitar parquet/CSV no git (arquivos grandes, geraveis localmente).
+5. Nao rodar `x.admin.popular-tabela-cabecalho` em `prd` sem validar em `dev` primeiro.
+6. Nao remover bloco sem confirmar que nenhum notebook referencia o simbolo diretamente.
+7. Nao reimplementar logica de extracao AST aqui; alteracoes do motor vao em `code-parquet-builder`.
 
 ## Dependencias operacionais
 
