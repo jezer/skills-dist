@@ -52,8 +52,7 @@ New-Item -ItemType Directory -Path $pendentesPath -Force | Out-Null
 New-Item -ItemType Directory -Path $feitasPath -Force | Out-Null
 
 $data = Get-Date -Format "yyyy-MM-dd"
-# Cabecalho com interpolacao (double-quoted here-string)
-$cabecalho = @"
+$conteudo = @"
 # $id - $tituloNorm
 
 - Empresa: $empresaNorm
@@ -73,17 +72,13 @@ Definir e acompanhar o chamado $id.
 
 ## Proximo passo obrigatorio
 
-"@
-# Bloco literal com backticks (single-quoted here-string nao processa escapes)
-$bloco = @'
 1. Executar a skill `route-skills-by-context` imediatamente apos a criacao deste chamado.
 2. Registrar a sessao inicial com `register-ticket-session` usando `route-skills-by-context` como skill executora inicial.
 
 ## Historico resumido
 
 1. Criacao do chamado.
-'@
-$conteudo = $cabecalho + $bloco
+"@
 
 $chamadoFile = Join-Path $chamadoPath "chamado.md"
 Set-Content -LiteralPath $chamadoFile -Value $conteudo -Encoding UTF8

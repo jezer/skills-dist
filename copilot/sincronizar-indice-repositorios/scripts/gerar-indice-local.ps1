@@ -73,11 +73,23 @@ function Get-RepoInfo {
     $cloneUrls = @()
 
     if ($hasGit) {
-        try { $branch = (git -c safe.directory=$Path -C $Path rev-parse --abbrev-ref HEAD 2>$null).Trim() } catch {}
-        try { $tracking = (git -c safe.directory=$Path -C $Path rev-parse --abbrev-ref --symbolic-full-name '@{u}' 2>$null).Trim() } catch {}
-        try { $status = (git -c safe.directory=$Path -C $Path status --short --branch 2>$null | Select-Object -First 1).Trim() } catch {}
+        function Invoke-GitClean {
+            param([string[]]$GitArgs)
+            $allArgs = @("-c", "safe.directory=$Path", "-C", $Path) + $GitArgs
+            $PSNativeCommandUseErrorActionPreference = $false
+            $oldErrorActionPreference = $ErrorActionPreference
+            $ErrorActionPreference = "Continue"
+            $lines = & git @allArgs 2>$null
+            $ErrorActionPreference = $oldErrorActionPreference
+            $lines = $lines | Where-Object { $_ -notmatch '^warning:' }
+            return (($lines | Out-String).Trim())
+        }
+
+        try { $branch = Invoke-GitClean -GitArgs @("rev-parse", "--abbrev-ref", "HEAD") } catch {}
+        try { $tracking = Invoke-GitClean -GitArgs @("rev-parse", "--abbrev-ref", "--symbolic-full-name", '@{u}') } catch {}
+        try { $status = ((Invoke-GitClean -GitArgs @("status", "--short", "--branch")) -split "`r?`n" | Select-Object -First 1).Trim() } catch {}
         try {
-            $log = (git -c safe.directory=$Path -C $Path log -1 --pretty=format:'%h|%cI|%s' 2>$null).Trim()
+            $log = Invoke-GitClean -GitArgs @("log", "-1", "--pretty=format:%h|%cI|%s")
             if ($log) {
                 $parts = $log -split '\|', 3
                 $lastHash = $parts[0]
@@ -86,7 +98,7 @@ function Get-RepoInfo {
             }
         } catch {}
         try {
-            $rms = git -c safe.directory=$Path -C $Path remote -v 2>$null
+            $rms = (Invoke-GitClean -GitArgs @("remote", "-v")) -split "`r?`n"
             foreach ($line in $rms) {
                 if ($line -match '^(\S+)\s+(\S+)\s+\((fetch|push)\)$') {
                     $name = $Matches[1]

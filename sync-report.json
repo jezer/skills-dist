@@ -1,14 +1,23 @@
 ﻿{
-    "generated_at":  "2026-05-24T11:16:42",
-    "apply":  false,
-    "skills_oficiais":  38,
+    "generated_at":  "2026-05-24T13:03:48",
+    "apply":  true,
+    "skills_oficiais":  28,
     "gemini":  {
                    "total":  36,
                    "missing":  [
 
                                ],
                    "extras":  [
-
+                                  "architecture-diagrammer",
+                                  "audit-card-pix-interest",
+                                  "build-bank-dispute-dossier",
+                                  "code-parquet-builder",
+                                  "presentation-designer",
+                                  "semaforo-container-partner-pattern",
+                                  "syg-sonarcloud-specialist",
+                                  "technical-writer",
+                                  "ui-infographic-generator",
+                                  "visual-storytelling"
                               ]
                },
     "copilot":  {
@@ -17,7 +26,16 @@
 
                                 ],
                     "extras":  [
-
+                                   "architecture-diagrammer",
+                                   "audit-card-pix-interest",
+                                   "build-bank-dispute-dossier",
+                                   "code-parquet-builder",
+                                   "presentation-designer",
+                                   "semaforo-container-partner-pattern",
+                                   "syg-sonarcloud-specialist",
+                                   "technical-writer",
+                                   "ui-infographic-generator",
+                                   "visual-storytelling"
                                ]
                 },
     "claude":  {
@@ -26,7 +44,16 @@
 
                                ],
                    "extras":  [
-
+                                  "architecture-diagrammer",
+                                  "audit-card-pix-interest",
+                                  "build-bank-dispute-dossier",
+                                  "code-parquet-builder",
+                                  "presentation-designer",
+                                  "semaforo-container-partner-pattern",
+                                  "syg-sonarcloud-specialist",
+                                  "technical-writer",
+                                  "ui-infographic-generator",
+                                  "visual-storytelling"
                               ]
                },
     "codex":  {
@@ -35,11 +62,20 @@
 
                               ],
                   "extras":  [
-
+                                 "architecture-diagrammer",
+                                 "audit-card-pix-interest",
+                                 "build-bank-dispute-dossier",
+                                 "code-parquet-builder",
+                                 "presentation-designer",
+                                 "semaforo-container-partner-pattern",
+                                 "syg-sonarcloud-specialist",
+                                 "technical-writer",
+                                 "ui-infographic-generator",
+                                 "visual-storytelling"
                              ]
               },
     "codex_global":  {
-                         "total":  37,
+                         "total":  26,
                          "missing":  [
 
                                      ],
@@ -47,9 +83,9 @@
 
                                     ]
                      },
-    "codex_bridge_ok":  true,
+    "codex_bridge_ok":  false,
     "codex_bridge_observacoes":  [
-
+                                     "Ponte global minima do Codex incompleta."
                                  ],
     "checkpoint_path":  "C:\\codes\\skills\\dist\\sync-checkpoint.json"
 }
