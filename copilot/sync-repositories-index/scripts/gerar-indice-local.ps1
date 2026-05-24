@@ -24,10 +24,17 @@ function Get-MachineTag {
 function Get-RepoInfo {
     param(
         [string]$Empresa,
-        [string]$Path
+        [string]$Path,
+        [string]$NameOverride = ""
     )
 
-    $nome = if ($Empresa -eq "root") { "codes-root" } else { Split-Path -Leaf $Path }
+    $nome = if ($NameOverride) {
+        $NameOverride
+    } elseif ($Empresa -eq "root") {
+        "codes-root"
+    } else {
+        Split-Path -Leaf $Path
+    }
     $hasGit = Test-Path (Join-Path $Path ".git")
     $repoType = if ($hasGit) {
         "repo"
@@ -50,23 +57,11 @@ function Get-RepoInfo {
     $cloneUrls = @()
 
     if ($hasGit) {
-        function Invoke-GitClean {
-            param([string[]]$GitArgs)
-            $allArgs = @("-c", "safe.directory=$Path", "-C", $Path) + $GitArgs
-            $PSNativeCommandUseErrorActionPreference = $false
-            $oldErrorActionPreference = $ErrorActionPreference
-            $ErrorActionPreference = "Continue"
-            $lines = & git @allArgs 2>$null
-            $ErrorActionPreference = $oldErrorActionPreference
-            $lines = $lines | Where-Object { $_ -notmatch '^warning:' }
-            return (($lines | Out-String).Trim())
-        }
-
-        try { $branch = Invoke-GitClean -GitArgs @("rev-parse", "--abbrev-ref", "HEAD") } catch {}
-        try { $tracking = Invoke-GitClean -GitArgs @("rev-parse", "--abbrev-ref", "--symbolic-full-name", '@{u}') } catch {}
-        try { $status = ((Invoke-GitClean -GitArgs @("status", "--short", "--branch")) -split "`r?`n" | Select-Object -First 1).Trim() } catch {}
+        try { $branch = (git -c safe.directory=$Path -C $Path rev-parse --abbrev-ref HEAD 2>$null).Trim() } catch {}
+        try { $tracking = (git -c safe.directory=$Path -C $Path rev-parse --abbrev-ref --symbolic-full-name '@{u}' 2>$null).Trim() } catch {}
+        try { $status = (git -c safe.directory=$Path -C $Path status --short --branch 2>$null | Select-Object -First 1).Trim() } catch {}
         try {
-            $log = Invoke-GitClean -GitArgs @("log", "-1", "--pretty=format:%h|%cI|%s")
+            $log = (git -c safe.directory=$Path -C $Path log -1 --pretty=format:'%h|%cI|%s' 2>$null).Trim()
             if ($log) {
                 $parts = $log -split '\|', 3
                 $lastHash = $parts[0]
@@ -75,7 +70,7 @@ function Get-RepoInfo {
             }
         } catch {}
         try {
-            $rms = (Invoke-GitClean -GitArgs @("remote", "-v")) -split "`r?`n"
+            $rms = git -c safe.directory=$Path -C $Path remote -v 2>$null
             foreach ($line in $rms) {
                 if ($line -match '^(\S+)\s+(\S+)\s+\((fetch|push)\)$') {
                     $name = $Matches[1]
@@ -130,6 +125,10 @@ $allProjects = @()
 foreach ($emp in $Empresas) {
     $root = Join-Path $WorkspaceRoot $emp
     if (-not (Test-Path $root)) { continue }
+    # Detecta repo parent da empresa (ex.: C:\codes\skills\.git agrega submodulos)
+    if (Test-Path (Join-Path $root ".git")) {
+        $allProjects += Get-RepoInfo -Empresa $emp -Path $root -NameOverride ("{0}-root" -f $emp)
+    }
     $dirs = Get-ChildItem -LiteralPath $root -Directory -ErrorAction SilentlyContinue
     foreach ($d in $dirs) {
         $allProjects += Get-RepoInfo -Empresa $emp -Path $d.FullName

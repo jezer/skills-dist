@@ -67,10 +67,14 @@ Criar, revisar, organizar e validar skills locais em `C:\codes\skills`.
    - revisar/atualizar referencias de caminho em scripts, workflows, planos e `AGENTS.md`;
    - rodar validacao completa (`validate-skills`, indices e sincronizador multi-IA) antes de concluir.
 14. Ordem obrigatoria de fechamento de manutencao de skill: `validar skills` -> `validar indices` -> `sincronizar IA`; nunca sincronizar IA antes da validacao das skills.
+15. Antes de aceitar skill vinda de clone externo (`git clone`, `gh repo clone`, sincronizacao de indice peer), comparar conteudo com versao em `core/` ou `domains/`; se for snapshot legado/duplicata, nao aceitar e registrar pedido de delete do repositorio remoto.
+16. Skills oficiais nao tem repositorio Git proprio nem URL remota dedicada; rejeitar qualquer pedido de criar `jezer/skill-<nome>.git` ou similar.
+17. Ao remover skill duplicata ou legada, aplicar checklist de propagacao multi-maquina: (a) `rm` da pasta local em toda maquina (`jz`, `jf`); (b) `gh repo delete` do remoto se houver; (c) regerar `indice-repositorios-root-<maquina>.json` em toda maquina; (d) commit + push do indice atualizado; (e) rodar `sincronizar-skills-ia.ps1 -Apply` para limpar destinos `dist/`.
+18. Auditoria periodica: o `revisor-periodico-skills` deve detectar e abrir pedido para qualquer skill em `C:\codes\skills\<nome>` (raiz) que nao seja repo canonico (`core`, `dist`, `domains`, `generators`, `git-user`, `indices`, `plan`, `reports`, `scripts`, `synchronizers`).
 
 ## Scripts
 
-1. `scripts/validate-skills.ps1`: valida todos os diretorios em `C:\codes\skills` que possuem `SKILL.md`.
+1. `scripts/validate-skills.ps1`: valida todos os diretorios em `C:\codes\skills` que possuem `SKILL.md`. Flags: `-AutoFixBom` remove BOM UTF-8 antes da validacao; `-ContinueOnError` reporta tudo sem abortar; `-ReportPath <caminho>` salva relatorio JSON com categoria de cada falha (`frontmatter-missing`, `yaml-invalid`, `description-angle-brackets`, `description-too-long`, `name-format`, `name-too-long`, `field-missing`, `unexpected-key`, `outro`).
 2. `scripts/atualizar-indices-skills.ps1`: gera ou valida indices auxiliares em `C:\codes\skills\indices`.
 3. Quando necessario, usar `configure-machine-default-skill` para validar a ponte global minima do Codex.
 4. `scripts/sincronizar-skills-ia.ps1`: sem `-Apply` exibe divergencias (missing/extras) entre skills oficiais e os 5 destinos (gemini, copilot, claude, codex, codex_global) e valida a ponte Codex; com `-Apply` copia todos os arquivos (`SKILL.md`, `agents/`, `scripts/`) para cada destino.
