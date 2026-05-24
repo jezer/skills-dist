@@ -45,6 +45,7 @@ Padronizar e automatizar operacoes Git recorrentes com limites seguros.
 16. Em pastas-raiz de empresa (`C:\codes\pv`, `C:\codes\syg`, `C:\codes\cnu`, `C:\codes\theo`, `C:\codes\elohim`, `C:\codes\skills`, `C:\codes\tools`), tratar cada subpasta direta como projeto com repositorio Git proprio, salvo excecao registrada no indice root.
 17. So usar submodule quando houver pedido explicito do usuario e registro no plano/atividade.
 18. Nao tentar corrigir manualmente cadeia de autenticacao remota quando houver skill especializada de conexao disponivel.
+19. Nao encerrar sync quando houver submodulo pendente no pai (`M <submodulo>`); isso exige commit do ponteiro no repositorio pai.
 
 ## Fluxo
 
@@ -74,6 +75,8 @@ Padronizar e automatizar operacoes Git recorrentes com limites seguros.
 24. Antes de concluir manutencao de estrutura de projetos por empresa, atualizar e validar o indice por maquina em `C:\codes\indice-repositorios-root-<usuario>.json` e `C:\codes\indice-repositorios-root-<usuario>.md` (usuario lido de `C:\codes\personalizado.md`).
 25. Quando diagnostico indicar erro de conexao, acionar scripts parametrizaveis dos skills `connect-github-gitlab` ou `connect-secondary-machine-git` antes de retentar push/pull.
 26. Sem validacao positiva de `connect-github-gitlab`, bloquear operacao remota e registrar pendencia de autenticacao na sessao/chamado.
+27. Em fluxo com submodulo, executar obrigatoriamente nesta ordem: `repositorio filho -> repositorio pai`.
+28. Em fluxo com submodulo, confirmar no fechamento o status sincronizado de ambos (`filho` e `pai`).
 
 ## Scripts
 
