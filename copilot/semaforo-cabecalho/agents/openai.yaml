@@ -1,0 +1,24 @@
+name: semaforo-cabecalho
+description: >-
+  Gerencia o framework Semaforo v3 — atualizar codigo-fonte, regenerar parquet,
+  versionar e deployar o cabecalho Delta no Databricks. Delega a geracao do
+  parquet para a skill `code-parquet-builder` via config/semaforo.json.
+when_to_use:
+  - alterar libs do framework Semaforo (lib_createobj, cabecalho)
+  - criar nova versao do cabecalho (v3.x -> v3.y)
+  - resolver colisao de ordens entre modulos
+  - orientar o fluxo deploy local -> Volumes -> tabela Delta -> loader
+how_to_use:
+  - editar fontes em C:/codes/pv/semaforo/plan/ativo/referencias/python
+  - rodar scripts/regenerar-cabecalho.ps1 [-Versao vX.Y]
+  - upload do parquet para /Volumes/libs/dev/libs_dev/semaforo_cabecalho/
+  - executar x.admin.popular-tabela-cabecalho no Databricks
+  - testar via %run x.cabecalho.v3.delta
+limites:
+  - nao alterar ordens existentes sem checar impacto nos 126+ notebooks dependentes
+  - nao commitar parquet/CSV no git
+  - nao rodar admin em prd sem validar em dev
+dependencies:
+  - code-parquet-builder (geracao do parquet)
+  - databricks-notebook-pattern (notebooks consumidores)
+  - maintain-git (commit e sync)

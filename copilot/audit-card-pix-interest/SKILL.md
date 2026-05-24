@@ -1,4 +1,4 @@
-﻿---
+---
 name: audit-card-pix-interest
 description: Auditar faturas e extratos de cartao com foco em PIX, juros, IOF, mora e multa, gerando evidencias por arquivo para detectar possiveis cobrancas indevidas.
 ---

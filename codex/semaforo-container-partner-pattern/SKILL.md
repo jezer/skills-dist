@@ -1,4 +1,4 @@
-﻿---
+---
 name: semaforo-container-partner-pattern
 description: Define o padrao de estrutura para implantar o cabecalho Semaforo em containers de projeto (especialmente CNU), com pastas x.semaforo_cabecalho, x.scripts e x.parameters e uso de %run relativo.
 ---

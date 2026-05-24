@@ -1,4 +1,4 @@
-﻿---
+---
 name: build-bank-dispute-dossier
 description: Montar dossie tecnico e textos formais de contestacao para banco, Procon e Bacen com base em evidencias de auditoria financeira.
 ---

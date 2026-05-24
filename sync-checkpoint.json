@@ -1,5 +1,5 @@
 ﻿{
-    "generated_at":  "2026-05-21T20:57:10",
+    "generated_at":  "2026-05-24T10:45:36",
     "mode":  "apply",
     "processed":  [
                       "maintain-activities",
@@ -22,6 +22,7 @@
                       "databricks-notebook-pattern",
                       "syg-cloudformation-aws",
                       "syg-rebates-parameterization",
+                      "syg-sonarcloud-specialist",
                       "syg-unit-test-specialist",
                       "syg-workflows-user-zone",
                       "audit-card-pix-interest",
@@ -34,10 +35,11 @@
                       "maintain-tickets",
                       "register-ticket-session",
                       "sincronizar-indice-repositorios",
+                      "code-parquet-builder",
                       "maintain-automations",
                       "sincronizar-indice-repositorios",
                       "sync-repositories-index"
                   ],
-    "total_processed":  35,
+    "total_processed":  37,
     "completed":  true
 }
