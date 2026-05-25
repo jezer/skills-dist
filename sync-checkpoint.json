@@ -1,5 +1,5 @@
 ﻿{
-    "generated_at":  "2026-05-24T20:04:34",
+    "generated_at":  "2026-05-24T22:13:14",
     "mode":  "apply",
     "processed":  [
                       "maintain-activities",
@@ -34,12 +34,10 @@
                       "maintain-git",
                       "maintain-tickets",
                       "register-ticket-session",
-                      "sincronizar-indice-repositorios",
                       "code-parquet-builder",
                       "maintain-automations",
-                      "sincronizar-indice-repositorios",
                       "sync-repositories-index"
                   ],
-    "total_processed":  37,
+    "total_processed":  35,
     "completed":  true
 }

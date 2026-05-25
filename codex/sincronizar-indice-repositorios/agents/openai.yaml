@@ -1,4 +1,0 @@
-name: sincronizar-indice-repositorios
-description: Atualizar e validar indice de repositorios do root por usuario/maquina.
-instructions:
-  default_prompt: "Use $sincronizar-indice-repositorios para regenerar e validar C:\\codes\\indice-repositorios-root-{jf|jz}.json e C:\\codes\\indice-repositorios-root-{jf|jz}.md quando houver mudancas de empresa/projeto/repositorio."

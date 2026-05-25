@@ -1,6 +1,6 @@
 ---
 name: connect-secondary-machine-git
-description: Configurar conectividade Git em segunda maquina Windows reaproveitando chave SSH padrao de forma segura e parametrizavel. Use quando a segunda maquina nao consegue autenticar no GitHub/GitLab.
+description: Configurar conectividade Git em segunda maquina Windows reaproveitando chave SSH padrao de forma segura e parametrizavel. Use quando a segunda maquina nao consegue autenticar no GitHub/GitLab. Foco em setup inicial cross-machine (importar/replicar chave); para diagnostico/recuperacao na propria maquina, usar `connect-github-gitlab`.
 ---
 
 # Conectar Segunda Maquina Git

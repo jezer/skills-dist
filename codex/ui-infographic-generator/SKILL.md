@@ -1,6 +1,6 @@
 ---
 name: ui-infographic-generator
-description: Criar infograficos tecnicos e executivos para resumo de processos, KPIs, comparativos e timelines.
+description: Criar infograficos tecnicos e executivos para resumo de processos, KPIs, comparativos e timelines. Use para visualizacao unica condensada (1 imagem). Distingue-se de `presentation-designer` (deck multi-slide) e `visual-storytelling` (narrativa sequencial).
 ---
 
 # UI Infographic Generator

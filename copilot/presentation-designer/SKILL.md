@@ -1,6 +1,6 @@
 ---
 name: presentation-designer
-description: Criar apresentacoes HTML tecnicas e executivas com foco visual, hierarquia de mensagem e fluxo por slide.
+description: Criar apresentacoes HTML tecnicas e executivas com foco visual, hierarquia de mensagem e fluxo por slide. Use para deck de slides estruturado. Distingue-se de `ui-infographic-generator` (visualizacao unica condensada) e `visual-storytelling` (narrativa sequencial sem deck).
 ---
 
 # Presentation Designer

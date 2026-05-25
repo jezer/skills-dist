@@ -1,6 +1,6 @@
 ---
 name: connect-github-gitlab
-description: Recuperar conectividade Git com GitHub/GitLab no Windows usando scripts parametrizaveis. Use quando houver erro de autenticacao SSH/HTTPS, falha de ssh-agent, chave ausente, ou bloqueio de push/pull por conexao.
+description: Recuperar conectividade Git com GitHub/GitLab no Windows usando scripts parametrizaveis. Use quando houver erro de autenticacao SSH/HTTPS, falha de ssh-agent, chave ausente, ou bloqueio de push/pull por conexao. Foco em diagnostico/recuperacao em UMA maquina; para setup inicial em segunda maquina reaproveitando chave existente, usar `connect-secondary-machine-git`.
 ---
 
 # Conectar GitHub GitLab

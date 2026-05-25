@@ -1,6 +1,6 @@
 ---
 name: visual-storytelling
-description: Transformar conteudo tecnico em narrativa visual com fluxo cognitivo claro para publico tecnico e executivo.
+description: Transformar conteudo tecnico em narrativa visual com fluxo cognitivo claro para publico tecnico e executivo. Use para narrativa sequencial (sequencia de cenas). Distingue-se de `presentation-designer` (deck de slides) e `ui-infographic-generator` (visualizacao unica).
 ---
 
 # Visual Storytelling
