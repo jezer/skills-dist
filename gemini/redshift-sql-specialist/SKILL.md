@@ -14,12 +14,28 @@ Apoiar investigacao tecnica e correcao de queries Redshift com rastreabilidade d
 1. Usar quando houver divergencia de resultados SQL versus regra de negocio.
 2. Usar para revisar views complexas com CTEs, calculos percentuais e faixas de regra.
 3. Usar antes de alterar SQL de producao quando houver validacao externa (ex.: Excel).
+4. Para comparacao estrutural de regras entre duas versoes de query/view (`old`, `v2`, `v3`, `v4`), acionar a skill `redshift-query-rules-comparator` e o projeto `C:\codes\tools\csv_comparator`.
 
 ## Limites
 
 1. Nao publicar mudanca sem plano e atividades.
 2. Nao alterar contexto de dados fora do projeto dono.
 3. Nao assumir sem validar unidade de medida de percentual e moeda.
+4. Nao substituir comparacao de regras SQL manual por inspeção visual quando houver multiplas colunas derivadas; usar o comparador dedicado.
+
+## Integracao com comparador de regras
+
+Para diferenca entre duas querys SQL por coluna do `SELECT`, use:
+
+1. Skill: `redshift-query-rules-comparator`.
+2. Projeto: `C:\codes\tools\csv_comparator`.
+3. Script principal: `C:\codes\tools\csv_comparator\executar_comparacao_regras.ps1`.
+
+Fluxo recomendado:
+
+1. Rodar comparacao de regras (`old` x `nova`).
+2. Identificar colunas alteradas (especialmente chave, percentuais e cases).
+3. Somente depois validar impacto de dados (CSV/SQL de amostra).
 
 ## Checklist tecnico
 

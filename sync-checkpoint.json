@@ -1,5 +1,5 @@
 ﻿{
-    "generated_at":  "2026-05-24T22:13:14",
+    "generated_at":  "2026-05-26T21:55:03",
     "mode":  "apply",
     "processed":  [
                       "maintain-activities",
@@ -10,6 +10,7 @@
                       "excel-validation-specialist",
                       "powershell-specialist",
                       "python-specialist",
+                      "redshift-query-rules-comparator",
                       "redshift-sql-specialist",
                       "architecture-diagrammer",
                       "presentation-designer",
@@ -38,6 +39,6 @@
                       "maintain-automations",
                       "sync-repositories-index"
                   ],
-    "total_processed":  35,
+    "total_processed":  36,
     "completed":  true
 }

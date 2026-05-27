@@ -1,0 +1,4 @@
+interface:
+  display_name: "Redshift Query Rules Comparator"
+  short_description: "Compara regras de colunas entre duas queries SQL Redshift"
+  default_prompt: "Compare duas queries Redshift por regras de colunas no SELECT e gere diagnostico objetivo de diferencas."
