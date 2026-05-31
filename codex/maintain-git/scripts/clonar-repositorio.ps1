@@ -3,7 +3,7 @@ param(
     [string]$Destino,
     [string]$BasePath,
     [string]$Pasta,
-    [string]$Branch,
+    [Parameter(Mandatory = $true)][string]$Branch,
     [int]$Depth,
     [switch]$DryRun
 )
@@ -32,6 +32,11 @@ if ([string]::IsNullOrWhiteSpace($Url)) {
 }
 
 $urlNorm = $Url.Trim()
+$branchNorm = $Branch.Trim()
+if ([string]::IsNullOrWhiteSpace($branchNorm)) {
+    throw "Branch obrigatoria. Informe explicitamente a branch de trabalho antes de clonar."
+}
+
 $folderName = if ($Pasta) { $Pasta.Trim() } else { Get-DefaultFolderName -RepoUrl $urlNorm }
 if ([string]::IsNullOrWhiteSpace($folderName)) {
     throw "Nao foi possivel definir o nome da pasta de destino."
@@ -54,19 +59,17 @@ if (Test-Path -LiteralPath $targetPath) {
     }
 }
 
-$args = @("clone", $urlNorm, $targetPath)
-if ($Branch) {
-    $args += @("--branch", $Branch)
-}
+$args = @("clone", "--branch", $branchNorm)
 if ($Depth -gt 0) {
     $args += @("--depth", $Depth)
 }
+$args += @($urlNorm, $targetPath)
 
 if ($DryRun) {
     [pscustomobject]@{
         Url = $urlNorm
         Destino = $targetPath
-        Branch = $Branch
+        Branch = $branchNorm
         Depth = $Depth
         Executado = $false
     }
@@ -82,10 +85,15 @@ if (-not (Test-Path -LiteralPath (Join-Path $targetPath ".git"))) {
     throw "Clone nao concluido corretamente: $targetPath"
 }
 
+$branchAtual = (Invoke-GitSafe -RepoPath $targetPath -GitArgs @("-C", $targetPath, "branch", "--show-current") | Out-String).Trim()
+if ($branchAtual -ne $branchNorm) {
+    throw "Clone concluido em branch inesperada. Esperado: '$branchNorm'. Atual: '$branchAtual'."
+}
+
 [pscustomobject]@{
     Url = $urlNorm
     Destino = $targetPath
-    Branch = if ($Branch) { $Branch } else { (Invoke-GitSafe -RepoPath $targetPath -GitArgs @("-C", $targetPath, "branch", "--show-current") | Out-String).Trim() }
+    Branch = $branchAtual
     Depth = $Depth
     Origin = ((Invoke-GitSafe -RepoPath $targetPath -GitArgs @("-C", $targetPath, "remote", "get-url", "origin") | Out-String).Trim())
     Executado = $true

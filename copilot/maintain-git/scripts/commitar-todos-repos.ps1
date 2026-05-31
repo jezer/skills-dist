@@ -5,7 +5,8 @@ param(
     [switch]$Push = $true,
     [switch]$AllowMainMaster,
     [switch]$NoVerify,
-    [switch]$DryRun
+    [switch]$DryRun,
+    [switch]$ForceAddAll = $true
 )
 
 $ErrorActionPreference = "Stop"
@@ -42,11 +43,16 @@ if (-not (Test-Path -LiteralPath $IndexPath)) {
 }
 
 $idx = Get-Content -LiteralPath $IndexPath -Raw | ConvertFrom-Json
+
 $repos = @()
-foreach ($c in $idx.companies) {
-    foreach ($p in $c.projects) {
-        if ($p.has_git -and $p.sync_enabled) {
-            $repos += $p.path
+if ($null -ne $idx.git_repos) {
+    foreach ($r in $idx.git_repos) {
+        if ($r.sync_enabled) { $repos += $r.full_path }
+    }
+} else {
+    foreach ($c in $idx.companies) {
+        foreach ($p in $c.projects) {
+            if ($p.has_git -and $p.sync_enabled) { $repos += $p.path }
         }
     }
 }
@@ -57,7 +63,7 @@ foreach ($repo in $repos) {
     if (-not (Test-Path -LiteralPath (Join-Path $repo ".git"))) { continue }
 
     try {
-        $branch = (Invoke-GitSafe -RepoPath $repo -GitArgs @("-C", $repo, "branch", "--show-current") | Out-String).Trim()
+        $branch = (Invoke-GitSafe -RepoPath $repo -GitArgs @("-C", $repo, "branch", "--show-current") | Out-String).Trim()        
         if ([string]::IsNullOrWhiteSpace($branch)) {
             $resultados += [pscustomobject]@{ Repo = $repo; Branch = ""; Resultado = "falha_branch"; Commit = "" }
             continue
@@ -73,16 +79,20 @@ foreach ($repo in $repos) {
         if ($remotes -match "(?m)^origin$") { $hasOrigin = $true }
 
         if ($Sync -and $hasOrigin -and -not $DryRun) {
-            Invoke-GitSafe -RepoPath $repo -GitArgs @("-C", $repo, "pull", "--rebase", "origin", $branch) | Out-Null
+            try {
+                Invoke-GitSafe -RepoPath $repo -GitArgs @("-C", $repo, "pull", "--rebase", "origin", $branch) | Out-Null
+            } catch {
+                Write-Warning "Falha no pull inicial em $repo. Tentando commit primeiro."
+            }
         }
 
         $status = Invoke-GitSafe -RepoPath $repo -GitArgs @("-C", $repo, "status", "--porcelain")
         if (-not $status) {
             if ($Push -and $hasOrigin -and -not $DryRun) {
                 Invoke-GitSafe -RepoPath $repo -GitArgs @("-C", $repo, "push", "-u", "origin", $branch) | Out-Null
-                $resultados += [pscustomobject]@{ Repo = $repo; Branch = $branch; Resultado = "sincronizado_sem_alteracoes"; Commit = "" }
+                $resultados += [pscustomobject]@{ Repo = $repo; Branch = $branch; Resultado = "sincronizado_sem_alteracoes_novas"; Commit = "" }
             } else {
-                $resultados += [pscustomobject]@{ Repo = $repo; Branch = $branch; Resultado = "sem_alteracoes"; Commit = "" }
+                $resultados += [pscustomobject]@{ Repo = $repo; Branch = $branch; Resultado = "sem_alteracoes"; Commit = "" }     
             }
             continue
         }
@@ -92,20 +102,27 @@ foreach ($repo in $repos) {
             continue
         }
 
-        Invoke-GitSafe -RepoPath $repo -GitArgs @("-C", $repo, "add", "-A")
+        if ($ForceAddAll) {
+            Invoke-GitSafe -RepoPath $repo -GitArgs @("-C", $repo, "add", "-A")
+        }
+
         $commitArgs = @("-C", $repo, "commit", "-m", $Mensagem)
         if ($NoVerify) { $commitArgs += "--no-verify" }
         Invoke-GitSafe -RepoPath $repo -GitArgs $commitArgs | Out-Null
-        $hash = (Invoke-GitSafe -RepoPath $repo -GitArgs @("-C", $repo, "rev-parse", "--short", "HEAD") | Out-String).Trim()
+        $hash = (Invoke-GitSafe -RepoPath $repo -GitArgs @("-C", $repo, "rev-parse", "--short", "HEAD") | Out-String).Trim()      
+
+        if ($Sync -and $hasOrigin) {
+             Invoke-GitSafe -RepoPath $repo -GitArgs @("-C", $repo, "pull", "--rebase", "origin", $branch) | Out-Null
+        }
 
         if ($Push -and $hasOrigin) {
             Invoke-GitSafe -RepoPath $repo -GitArgs @("-C", $repo, "push", "-u", "origin", $branch) | Out-Null
-            $resultados += [pscustomobject]@{ Repo = $repo; Branch = $branch; Resultado = "sync_commit_push"; Commit = $hash }
+            $resultados += [pscustomobject]@{ Repo = $repo; Branch = $branch; Resultado = "sync_commit_push_completo"; Commit = $hash }    
         } else {
-            $resultados += [pscustomobject]@{ Repo = $repo; Branch = $branch; Resultado = "commitado_sem_push"; Commit = $hash }
+            $resultados += [pscustomobject]@{ Repo = $repo; Branch = $branch; Resultado = "commitado_local"; Commit = $hash }  
         }
     } catch {
-        $resultados += [pscustomobject]@{ Repo = $repo; Branch = ""; Resultado = "falha: $($_.Exception.Message)"; Commit = "" }
+        $resultados += [pscustomobject]@{ Repo = $repo; Branch = ""; Resultado = "falha: $($_.Exception.Message)"; Commit = "" }  
     }
 }
 

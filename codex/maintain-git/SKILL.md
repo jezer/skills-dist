@@ -12,7 +12,7 @@ Padronizar e automatizar operacoes Git recorrentes com limites seguros.
 ## Uso
 
 1. Usar para criar repositorio quando solicitado.
-2. Usar para clonar repositorio quando solicitado.
+2. Usar para clonar repositorio quando solicitado, sempre com branch de trabalho explicita.
 3. Usar para sugerir ou criar branch.
 4. Usar para preparar mensagem de commit.
 5. Quando houver pedido de commit, executar por padrao o fluxo completo `sync + commit + push`, exceto se o usuario pedir explicitamente para nao fazer uma dessas etapas.
@@ -46,6 +46,7 @@ Padronizar e automatizar operacoes Git recorrentes com limites seguros.
 17. So usar submodule quando houver pedido explicito do usuario e registro no plano/atividade.
 18. Nao tentar corrigir manualmente cadeia de autenticacao remota quando houver skill especializada de conexao disponivel.
 19. Nao encerrar sync quando houver submodulo pendente no pai (`M <submodulo>`); isso exige commit do ponteiro no repositorio pai.
+20. Nao executar clone sem branch explicita; se a branch de trabalho nao estiver informada, bloquear e solicitar a branch antes de clonar.
 
 ## Fluxo
 
@@ -55,7 +56,7 @@ Padronizar e automatizar operacoes Git recorrentes com limites seguros.
 4. Confirmar chamado, plano e atividade quando a operacao for persistente.
 5. Executar `route-skills-by-context` como etapa obrigatoria antes de operacao persistente e registrar roteamento na sessao ativa.
 6. Conferir `git status` antes de branch, commit, pull, merge, rebase ou push.
-7. Quando o pedido for clone, priorizar `scripts/clonar-repositorio.ps1` com URL e destino explicitos.
+7. Quando o pedido for clone, priorizar `scripts/clonar-repositorio.ps1` com URL, destino e branch explicitos.
 8. Antes de commit ou push, validar que a branch atual nao e `main` nem `master`; se for, criar branch de trabalho.
 9. Se o pedido incluir commit e nao houver restricao explicita, executar `sync + commit + push` no mesmo fluxo.
 10. Consultar `C:\codes\tools\git` apenas se houver necessidade de artefato compartilhado.
@@ -77,11 +78,12 @@ Padronizar e automatizar operacoes Git recorrentes com limites seguros.
 26. Sem validacao positiva de `connect-github-gitlab`, bloquear operacao remota e registrar pendencia de autenticacao na sessao/chamado.
 27. Em fluxo com submodulo, executar obrigatoriamente nesta ordem: `repositorio filho -> repositorio pai`.
 28. Em fluxo com submodulo, confirmar no fechamento o status sincronizado de ambos (`filho` e `pai`).
+29. Em fluxo de clone, validar apos a execucao que o repositorio ficou exatamente na branch solicitada; se nao ficar, tratar como falha do clone.
 
 ## Scripts
 
 1. `scripts/novo-repositorio.ps1`: cria pasta, inicializa repositorio Git e pode criar ou vincular o repo no GitHub quando solicitado.
-2. `scripts/clonar-repositorio.ps1`: clona repositorio por URL com destino parametrizado, validando conflito de pasta e suporte a `-DryRun`.
+2. `scripts/clonar-repositorio.ps1`: clona repositorio por URL com destino e branch parametrizados, validando conflito de pasta, exigindo branch explicita, conferindo checkout final e oferecendo suporte a `-DryRun`.
 3. `scripts/gravar-convencoes.ps1`: grava o arquivo raiz `git-convencoes.md`.
 4. `scripts/nova-branch.ps1`: sugere ou cria branch padronizada.
 5. `scripts/preparar-commit.ps1`: gera mensagem de commit padronizada.
