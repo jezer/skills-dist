@@ -11,9 +11,9 @@ $ErrorActionPreference = "Stop"
 
 function Get-MachineTag {
     param([string]$Workspace)
-    $customPath = Join-Path $Workspace "personalizado.md"
+    $customPath = Join-Path $Workspace "personalizado.md"  
     if (Test-Path -LiteralPath $customPath) {
-        $raw = Get-Content -LiteralPath $customPath -Raw
+        $raw = Get-Content -LiteralPath $customPath -Raw   
         if ($raw -match "Usuario atual:\s*([a-zA-Z0-9_-]+)") {
             return $Matches[1].ToLowerInvariant()
         }
@@ -57,7 +57,7 @@ function Get-RepoInfo {
     $cloneUrls = @()
 
     if ($hasGit) {
-        try { $branch = (git -c safe.directory=$Path -C $Path rev-parse --abbrev-ref HEAD 2>$null).Trim() } catch {}
+        try { $branch = (git -c safe.directory=$Path -C $Path rev-parse --abbrev-ref HEAD 2>$null).Trim() } catch {}  
         try { $tracking = (git -c safe.directory=$Path -C $Path rev-parse --abbrev-ref --symbolic-full-name '@{u}' 2>$null).Trim() } catch {}
         try { $status = (git -c safe.directory=$Path -C $Path status --short --branch 2>$null | Select-Object -First 1).Trim() } catch {}
         try {
@@ -103,10 +103,10 @@ function Get-RepoInfo {
         path = $Path
         repo_type = $repoType
         has_git = $hasGit
-        default_branch = $branch
+        current_branch = $branch
         tracking_branch = $tracking
         remotes = $remotes
-        clone_urls = ($cloneUrls | Select-Object -Unique)
+        clone_urls = @($cloneUrls | Select-Object -Unique)  
         last_commit = [pscustomobject]@{
             hash = $lastHash
             date = $lastDate
@@ -120,12 +120,11 @@ function Get-RepoInfo {
     }
 }
 
-$machineTag = Get-MachineTag -Workspace $WorkspaceRoot
+$machineTag = Get-MachineTag -Workspace $WorkspaceRoot     
 $allProjects = @()
 foreach ($emp in $Empresas) {
     $root = Join-Path $WorkspaceRoot $emp
     if (-not (Test-Path $root)) { continue }
-    # Detecta repo parent da empresa (ex.: C:\codes\skills\.git agrega submodulos)
     if (Test-Path (Join-Path $root ".git")) {
         $allProjects += Get-RepoInfo -Empresa $emp -Path $root -NameOverride ("{0}-root" -f $emp)
     }
@@ -135,7 +134,6 @@ foreach ($emp in $Empresas) {
     }
 }
 
-# Inclui explicitamente o repositorio raiz do workspace no indice.
 $allProjects += Get-RepoInfo -Empresa "root" -Path $WorkspaceRoot
 
 if ($IncludePeerMachineIndexes) {
@@ -149,28 +147,29 @@ if ($IncludePeerMachineIndexes) {
         try {
             $peerTag = [System.IO.Path]::GetFileNameWithoutExtension($pf.Name) -replace '^indice-repositorios-root-', ''
             $peer = Get-Content -Raw -LiteralPath $pf.FullName | ConvertFrom-Json
-            foreach ($c in $peer.companies) {
-                foreach ($pp in $c.projects) {
-                    $k = $pp.path.ToLowerInvariant()
-                    if ($knownPaths.ContainsKey($k)) { continue }
-                    $knownPaths[$k] = $true
-                    $allProjects += [pscustomobject]@{
-                        company = $c.name
-                        project_name = $pp.project_name
-                        path = $pp.path
-                        repo_type = "externo"
-                        has_git = $false
-                        default_branch = $pp.default_branch
-                        tracking_branch = $pp.tracking_branch
-                        remotes = $pp.remotes
-                        clone_urls = $pp.clone_urls
-                        last_commit = $pp.last_commit
-                        status_short = "externo:$peerTag"
-                        risk_level = "atencao"
-                        notes = "repositorio referenciado de outra maquina ($peerTag); avaliar clone local"
-                        sync_enabled = $false
-                        sync_block_reason = "referencia externa de outra maquina"
-                    }
+            $peerRepos = if ($null -ne $peer.git_repos) { $peer.git_repos } else { 
+                $c = @(); foreach ($comp in $peer.companies) { foreach ($proj in $comp.projects) { $c += $proj } }; $c
+            }
+            foreach ($pp in $peerRepos) {
+                $k = $pp.path.ToLowerInvariant()       
+                if ($knownPaths.ContainsKey($k)) { continue }
+                $knownPaths[$k] = $true
+                $allProjects += [pscustomobject]@{     
+                    company = $pp.company
+                    project_name = $pp.project_name    
+                    path = $pp.path
+                    repo_type = "externo"
+                    has_git = $false
+                    current_branch = if ($null -ne $pp.current_branch) { $pp.current_branch } else { $pp.default_branch }
+                    tracking_branch = $pp.tracking_branch
+                    remotes = $pp.remotes
+                    clone_urls = $pp.clone_urls        
+                    last_commit = $pp.last_commit      
+                    status_short = "externo:$peerTag"  
+                    risk_level = "atencao"
+                    notes = "repositorio referenciado de outra maquina ($peerTag); avaliar clone local"
+                    sync_enabled = $false
+                    sync_block_reason = "referencia externa de outra maquina"
                 }
             }
         } catch {}
@@ -178,26 +177,17 @@ if ($IncludePeerMachineIndexes) {
 }
 
 $companies = @()
-foreach ($emp in $Empresas) {
+foreach ($emp in ($Empresas + @("root"))) {
     $items = @($allProjects | Where-Object { $_.company -eq $emp })
+    if ($items.Count -eq 0) { continue }
     $companies += [pscustomobject]@{
         name = $emp
-        root_path = (Join-Path $WorkspaceRoot $emp)
+        root_path = if ($emp -eq "root") { $WorkspaceRoot } else { (Join-Path $WorkspaceRoot $emp) }
         projects = $items
         projects_total = $items.Count
         git_repos_total = @($items | Where-Object { $_.has_git }).Count
         sem_git_total = @($items | Where-Object { -not $_.has_git }).Count
     }
-}
-
-$rootItems = @($allProjects | Where-Object { $_.company -eq "root" })
-$companies += [pscustomobject]@{
-    name = "root"
-    root_path = $WorkspaceRoot
-    projects = $rootItems
-    projects_total = $rootItems.Count
-    git_repos_total = @($rootItems | Where-Object { $_.has_git }).Count
-    sem_git_total = @($rootItems | Where-Object { -not $_.has_git }).Count
 }
 
 $jsonObj = [pscustomobject]@{
@@ -207,6 +197,7 @@ $jsonObj = [pscustomobject]@{
     companies_total = $companies.Count
     projects_total = $allProjects.Count
     git_repos_total = @($allProjects | Where-Object { $_.has_git }).Count
+    git_repos = $allProjects | Where-Object { $_.has_git }
     companies = $companies
 }
 
@@ -215,43 +206,39 @@ $jsonObj | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $jsonPath -Encodin
 
 if (-not $JsonOnly) {
     $mdPath = Join-Path $WorkspaceRoot ("indice-repositorios-root-{0}.md" -f $machineTag)
-    $naoSync = @()
-    foreach ($c in $companies) {
-        foreach ($p in $c.projects) {
-            if (-not $p.sync_enabled) {
-                $naoSync += "$($c.name)/$($p.project_name) - $($p.sync_block_reason)"
-            }
-        }
-    }
-
     $lines = @()
     $lines += "# Indice de Repositorios Root"
     $lines += ""
     $lines += "- Workspace: $WorkspaceRoot"
     $lines += "- Chamado: $TicketId"
-    $lines += "- Gerado em: $($jsonObj.generated_at)"
+    $lines += "- Gerado em: $($jsonObj.generated_at)"      
     $lines += "- Total de empresas: $($jsonObj.companies_total)"
     $lines += "- Total de projetos: $($jsonObj.projects_total)"
     $lines += "- Total de repositorios Git validos: $($jsonObj.git_repos_total)"
-    $lines += "- Itens nao sincronizaveis: $($naoSync.Count)"
     $lines += ""
-    $lines += "## Resumo por empresa"
+    $lines += "## Projetos por empresa"
     $lines += ""
     foreach ($c in $companies) {
         $lines += "### $($c.name)"
         $lines += "- Raiz: $($c.root_path)"
-        $lines += "- Projetos encontrados: $($c.projects_total)"
-        $lines += "- Repos Git validos: $($c.git_repos_total)"
-        $lines += "- Projetos sem Git: $($c.sem_git_total)"
+        $lines += ""
+        $lines += "| Projeto | Tipo | Git | Branch | Status | Commit |"
+        $lines += "|---------|------|-----|--------|--------|--------|"
+        foreach ($p in $c.projects) {
+            $gitMark = if ($p.has_git) { "Sim" } else { "Nao" }
+            $branch = if ($p.current_branch) { $p.current_branch } else { "-" }
+            $commit = if ($p.last_commit.hash) { $p.last_commit.hash } else { "-" }
+            $lines += "| $($p.project_name) | $($p.repo_type) | $gitMark | $branch | $($p.status_short) | $commit |"
+        }
         $lines += ""
     }
     Set-Content -LiteralPath $mdPath -Value ($lines -join "`r`n") -Encoding UTF8
 }
 
 if ($WriteLegacyAlias) {
-    Copy-Item -LiteralPath $jsonPath -Destination (Join-Path $WorkspaceRoot "indice-repositorios-root.json") -Force
+    Copy-Item -LiteralPath $jsonPath -Destination (Join-Path $WorkspaceRoot "indice-repositorios-root.json") -Force   
     if (-not $JsonOnly) {
-        Copy-Item -LiteralPath $mdPath -Destination (Join-Path $WorkspaceRoot "indice-repositorios-root.md") -Force
+        Copy-Item -LiteralPath $mdPath -Destination (Join-Path $WorkspaceRoot "indice-repositorios-root.md") -Force   
     }
 }
 
@@ -263,3 +250,5 @@ if ($WriteLegacyAlias) {
     Projects = $jsonObj.projects_total
     GitRepos = $jsonObj.git_repos_total
 }
+
+

@@ -1,0 +1,4 @@
+interface:
+  display_name: "PostgreSQL Support"
+  short_description: "Instalar, configurar e diagnosticar PostgreSQL local."
+  default_prompt: "Use esta skill para instalar, configurar, validar ou diagnosticar PostgreSQL no Windows."

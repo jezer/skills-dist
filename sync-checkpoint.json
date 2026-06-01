@@ -1,5 +1,5 @@
 ﻿{
-    "generated_at":  "2026-05-31T16:36:15",
+    "generated_at":  "2026-06-01T17:48:57",
     "mode":  "apply",
     "processed":  [
                       "maintain-activities",
@@ -7,7 +7,10 @@
                       "route-skills-by-context",
                       "maintain-skills",
                       "periodic-skills-reviewer",
+                      "automated-test-builder",
+                      "alembic-db-specialist",
                       "excel-validation-specialist",
+                      "fastapi-specialist",
                       "powershell-specialist",
                       "python-specialist",
                       "redshift-query-rules-comparator",
@@ -30,15 +33,18 @@
                       "build-bank-dispute-dossier",
                       "connect-github-gitlab",
                       "connect-secondary-machine-git",
+                      "ia-gateway-specialist",
                       "maintain-agents",
                       "maintain-filesystem",
                       "maintain-git",
                       "maintain-tickets",
+                      "postgresql-support",
                       "register-ticket-session",
+                      "sci-content-flow",
                       "code-parquet-builder",
                       "maintain-automations",
                       "sync-repositories-index"
                   ],
-    "total_processed":  36,
+    "total_processed":  42,
     "completed":  true
 }
