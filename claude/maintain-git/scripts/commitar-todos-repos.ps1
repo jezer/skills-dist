@@ -243,7 +243,12 @@ if ($null -ne $idx.git_repos) {
         }
     }
 }
-$repos = @($repos | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | Sort-Object -Unique)
+$repos = @(
+    $repos |
+    Where-Object { -not [string]::IsNullOrWhiteSpace($_) } |
+    Sort-Object -Unique |
+    Sort-Object @{ Expression = { $_.Length }; Descending = $true }, @{ Expression = { $_ }; Ascending = $true }
+)
 
 $resultados = @()
 foreach ($repo in $repos) {

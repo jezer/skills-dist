@@ -1,6 +1,6 @@
 ---
 name: sci-content-flow
-description: Manage the SCI artifact lifecycle in the workspace: draft creation, IA-based topic classification with confidence percentage, plan-before-execute confirmation panel, contextual publishing, 12h auto-publish job, context correction alert, comment emotion classification, and quality score calculation. Use when implementing or operating any artifact flow in C:\codes\tools\artifact-engine or C:\codes\tools\all_IA.
+description: "Manage the SCI artifact lifecycle in the workspace: draft creation, IA-based topic classification with confidence percentage, plan-before-execute confirmation panel, contextual publishing, 12h auto-publish job, context correction alert, comment emotion classification, and quality score calculation. Use when implementing or operating any artifact flow in C:\\codes\\tools\\artifact-engine or C:\\codes\\tools\\all_IA."
 ---
 
 # SCI Content Flow
