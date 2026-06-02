@@ -1,0 +1,4 @@
+name: automated-test-builder
+description: "Build automated test suites following AAA and BDD patterns with pytest and Playwright. Use when the activity requires creating test scenarios, fixtures, parametrized tests, E2E smoke tests, or enforcing the 80% coverage gate for workspace modules."
+instructions:
+  default_prompt: "Use $automated-test-builder para suites pytest (AAA/BDD), fixtures, marcadores (unit/integration/e2e/sci/docker), testes E2E Playwright headless e gate de cobertura --cov-fail-under=80. Nao implementa logica de negocio."

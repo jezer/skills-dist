@@ -1,0 +1,4 @@
+name: sci-content-flow
+description: "Manage the SCI artifact lifecycle: draft creation, IA-based topic classification with confidence percentage, plan-before-execute confirmation panel, contextual publishing, 12h auto-publish job, context correction alert, and quality score calculation."
+instructions:
+  default_prompt: "Use $sci-content-flow para implementar ou operar o ciclo de vida de artefatos SCI: rascunho, classificacao por IA, confirmacao de topico, auto-publicacao 12h, alerta de correcao de contexto, quality score e plan_panel."

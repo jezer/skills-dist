@@ -1,0 +1,4 @@
+name: ia-gateway-specialist
+description: "Operate and maintain the IA gateway module: configure IA providers, define routing rules by subject/skill/complexity, manage usage limits, track costs, and implement fallback logic."
+instructions:
+  default_prompt: "Use $ia-gateway-specialist para configurar provedores de IA, regras de roteamento (assunto/skill/complexidade), limites, fallback e custo. Nao gerencia usuarios nem conteudo dos prompts."
