@@ -39,6 +39,78 @@ Construir suites de testes automatizados reutilizaveis para os modulos do worksp
 7. **Gate de cobertura:** `pytest --cov={modulo} --cov-fail-under=80` e obrigatorio antes de marcar qualquer atividade como concluida. Sem esse gate, atividade permanece em andamento.
 8. **Cenarios de instalacao de IA** (`@pytest.mark.ia_install`) sao os primeiros cenarios a implementar em qualquer modulo que use provedores de IA. Parametrizados por provedor; dados em `test_data/providers.json`.
 
+## Fixture de banco SQLite em memoria (padrao conftest.py)
+
+```python
+import pytest
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.pool import StaticPool
+from app.database import Base, get_db
+from app.main import app
+from app.seed_data import seed_database
+
+@pytest.fixture()
+def db_session():
+    engine = create_engine(
+        "sqlite:///:memory:",
+        future=True,
+        connect_args={"check_same_thread": False},
+        poolclass=StaticPool,
+    )
+    Base.metadata.create_all(bind=engine)
+    factory = sessionmaker(bind=engine, future=True)
+    with factory() as session:
+        seed_database(session)
+        yield session
+
+@pytest.fixture()
+def client(db_session):
+    from fastapi.testclient import TestClient
+    def override():
+        yield db_session
+    app.dependency_overrides[get_db] = override
+    with TestClient(app) as c:
+        yield c
+    app.dependency_overrides.clear()
+```
+
+## Fixture com tmp_path para testes de filesystem
+
+```python
+def test_sync_filesystem(db_session, tmp_path):
+    # Arrange: criar estrutura de diretorios
+    (tmp_path / "pv" / "semaforo").mkdir(parents=True)
+    (tmp_path / "pv" / "plan").mkdir()   # deve ser ignorado
+
+    # Act
+    result = sync_project_tree_from_filesystem(db_session, tmp_path, ["pv"])
+
+    # Assert
+    assert result["upserted"] == 1     # so semaforo, nao plan
+    assert result["sem_alteracao"] == 0
+
+    # Idempotencia
+    result2 = sync_project_tree_from_filesystem(db_session, tmp_path, ["pv"])
+    assert result2["upserted"] == 0
+    assert result2["sem_alteracao"] == 1
+```
+
+## Marcadores pytest usados no projeto all_IA
+
+```ini
+# pytest.ini
+[pytest]
+markers =
+    unit: testes unitarios isolados (banco em memoria)
+    integration: testes com banco SQLite de teste
+    e2e: testes Playwright headless
+    ia_install: verifica conexao real com provedor de IA
+    ia_smart: cenarios de IA adaptativa por historico
+    sci: suite do SCI (artifact-engine, flows)
+    docker: requer Docker disponivel
+```
+
 ## Estrutura padrao de suite
 
 ```
