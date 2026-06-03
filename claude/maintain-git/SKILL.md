@@ -16,6 +16,9 @@ Padronizar e automatizar operacoes Git recorrentes com limites seguros.
 3. Usar para sugerir ou criar branch.
 4. Usar para preparar mensagem de commit.
 5. Quando houver pedido de commit, executar por padrao o fluxo completo `sync + commit + push`, exceto se o usuario pedir explicitamente para nao fazer uma dessas etapas.
+5.1. Todo pedido de commit deve passar por esta skill (`maintain-git`); nao usar comandos `git` soltos como caminho principal, apenas como detalhe de execucao dos scripts da skill.
+5.2. Quando o pedido envolver "todos os repositorios", "todos os repos", "repos do indice" ou equivalente, SEMPRE usar `scripts/commitar-todos-repos.ps1` lendo `indice-repositorios-root-<usuario>.json`, com `-Sync -Push` por padrao (nunca commitar repo a repo manualmente nesse caso).
+5.3. Reportar o resultado por repo (`sync_commit_push_completo`, `sincronizado_sem_alteracoes_novas`, `ignorado_branch_protegida`, `commitado_local`) e sinalizar repos sem `origin` e branches protegidas puladas.
 6. Consultar `C:\codes\tools\git` somente quando a operacao exigir artefato compartilhado, inventario ou referencia da tool.
 7. Usar para bootstrap de repositorio novo, reorganizado ou ja existente com `git-convencoes.md` na raiz.
 8. Quando o fluxo exigir publicacao, criar ou vincular o repositorio no GitHub com `gh` a partir do bootstrap.
