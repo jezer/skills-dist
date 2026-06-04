@@ -1,6 +1,12 @@
 ---
 name: maintain-filesystem
 description: Manter regras de pastas, arquivos e repositorios do workspace C:\codes. Use quando Codex precisar revisar root, file_system, regras_file_system, estrutura de empresas, .gitignore da raiz, personalizado.md, template.personalizado.md, ou organizacao de repositorios em C:\codes.
+metadata:
+  triggers:
+    - regras de pastas
+    - organizar diretorios
+    - file system
+    - estrutura de repositorios
 ---
 
 # Manter File System

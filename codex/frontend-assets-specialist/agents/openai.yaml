@@ -1,0 +1,5 @@
+openapi: "3.0.0"
+info:
+  title: frontend-assets-specialist
+  description: "Manage frontend assets (images, icons, fonts, favicons) with correct format, compression and delivery strategy. Converts PNG to WebP with Pillow, defines base64 vs file thresholds, generates favicons and PWA icons."
+  version: "1.0"

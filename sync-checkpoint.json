@@ -1,5 +1,5 @@
 ﻿{
-    "generated_at":  "2026-06-01T17:53:11",
+    "generated_at":  "2026-06-04T11:37:24",
     "mode":  "apply",
     "processed":  [
                       "maintain-activities",
@@ -8,6 +8,8 @@
                       "maintain-skills",
                       "periodic-skills-reviewer",
                       "automated-test-builder",
+                      "frontend-assets-specialist",
+                      "ux-navigation-specialist",
                       "alembic-db-specialist",
                       "excel-validation-specialist",
                       "fastapi-specialist",
@@ -45,6 +47,6 @@
                       "maintain-automations",
                       "sync-repositories-index"
                   ],
-    "total_processed":  42,
+    "total_processed":  44,
     "completed":  true
 }

@@ -1,0 +1,4 @@
+name: fastapi-specialist
+description: "Design, implement and test FastAPI applications. Use when the activity requires FastAPI routers, middleware, Jinja2 templates, dependency injection, Pydantic v2 schemas, or testing with TestClient and pytest-asyncio."
+instructions:
+  default_prompt: "Use $fastapi-specialist para criar ou revisar estrutura FastAPI: routers, middlewares, Jinja2, Pydantic v2, Depends(), TestClient. Apoie a skill dona do dominio sem assumir logica de negocio."

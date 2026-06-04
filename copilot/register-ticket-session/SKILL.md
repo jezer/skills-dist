@@ -1,6 +1,10 @@
 ---
 name: register-ticket-session
 description: Criar referencia inicial de sessao pendente no workspace C:\codes. Use somente no inicio de um trabalho com chamado ativo para criar chamados/{empresa}/{usuario}/{ano}/{sequencial}/sessoes/pendentes/NNN.md; ao concluir, a skill solicitada para a atividade deve mover a sessao para sessoes/feitas/NNN.md.
+metadata:
+  triggers:
+    - registrar sessao
+    - sessao do chamado
 ---
 
 # Registrar Sessao Chamado

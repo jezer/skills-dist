@@ -1,6 +1,13 @@
 ---
 name: maintain-git
 description: Preparar ou executar operacoes Git seguras no workspace C:\codes. Use para criar repositorio local e no GitHub quando solicitado, sugerir ou criar branch, preparar mensagem de commit, executar commit ou sincronizar repositorio, seguindo C:\codes\tools\git e exigindo plano/atividade para operacoes persistentes.
+metadata:
+  triggers:
+    - commit
+    - push
+    - sincronizar repositorios
+    - commitar todos os repos
+    - nova branch
 ---
 
 # Manter Git

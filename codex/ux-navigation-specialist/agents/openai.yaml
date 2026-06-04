@@ -1,0 +1,5 @@
+openapi: "3.0.0"
+info:
+  title: ux-navigation-specialist
+  description: "Design and validate navigability and efficient UX: navigation models, information architecture, UX heuristics, flow efficiency (clicks/latency), empty/loading/error states, accessibility/keyboard nav, and acceptance criteria verifiable by Playwright/test_aut."
+  version: "1.0"

@@ -71,7 +71,7 @@ make rebuild
 python scripts/rebuild/rebuild.py --no-sync
 ```
 
-**Por que create_all em vez de alembic upgrade head:**
+**Por que create_all em vez de alembic upgrade head no rebuild:**
 - `Base.metadata.create_all` e atomico e confiavel; nao depende de subprocess nem de PATH
 - `alembic upgrade head` apos drop pode ter issues de transacao com PostgreSQL DDL
 - `alembic stamp head` mantem o tracking de migrations funcionando para o futuro

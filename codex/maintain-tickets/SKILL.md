@@ -1,6 +1,11 @@
 ---
 name: maintain-tickets
 description: Manutencao minima de chamado no workspace C:\codes. Use somente quando o chamado atual nao estiver objetivo e claro, ou quando Codex precisar criar, localizar, validar ou corrigir o chamado ativo no formato EMPRESA-USUARIO-CH-ANO-NNNNN.
+metadata:
+  triggers:
+    - criar chamado
+    - abrir chamado
+    - revisar chamado
 ---
 
 # Manter Chamados

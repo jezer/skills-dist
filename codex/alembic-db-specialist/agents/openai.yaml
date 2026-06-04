@@ -1,0 +1,4 @@
+name: alembic-db-specialist
+description: "Define SQLAlchemy 2.0 models, manage Alembic migrations and write idempotent seed scripts. Use when the activity requires creating or updating ORM models, generating or applying migrations, or populating initial data."
+instructions:
+  default_prompt: "Use $alembic-db-specialist para modelos ORM SQLAlchemy 2.0, migrations Alembic (revision --autogenerate, upgrade head) e scripts de seed idempotentes. Nao misturar com logica de negocio."

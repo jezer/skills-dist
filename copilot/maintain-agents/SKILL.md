@@ -1,6 +1,10 @@
 ---
 name: maintain-agents
 description: Revisar, criar ou atualizar arquivos AGENTS.md do workspace C:\codes somente quando o usuario solicitar explicitamente. Use para alterar regras persistentes, alinhar instrucoes entre raiz, controle de chamados e skills, numerar regras, remover contradicoes, ou garantir que AGENTS.md aponte para C:\codes\skills e para o controle de chamados.
+metadata:
+  triggers:
+    - revisar agents.md
+    - atualizar regras de contexto
 ---
 
 # Manter Agents

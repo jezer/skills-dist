@@ -34,6 +34,53 @@ Padronizar a definicao de modelos ORM, o ciclo de migrations com Alembic e scrip
 4. `alembic downgrade base` deve remover todas as tabelas sem erro.
 5. Modelos ORM em `app/models.py`; schemas Pydantic em `app/schemas.py` (nunca misturar).
 
+## Padrao obrigatorio de rebuild (drop/recreate/seed)
+
+**Regra:** nunca assumir estado parcial do banco. Antes de confiar nos dados, reconstruir do zero.
+
+O script de rebuild fica em `backend/scripts/rebuild/rebuild.py` e e o padrao para:
+- Ambiente de desenvolvimento local
+- CI/CD antes de testes de integracao
+- Reset apos mudancas de schema em desenvolvimento
+- Onboarding de nova maquina
+
+**Sequencia obrigatoria:**
+```
+1. Base.metadata.drop_all(engine)          # remove todas as tabelas
+2. Base.metadata.create_all(engine)        # recria a partir dos modelos
+3. alembic stamp head                       # sincroniza tracking de migrations
+4. seed_database(db)                        # insere dados iniciais (idemportente)
+5. sync_all(db, settings)                  # popula dados do workspace
+```
+
+**Como executar:**
+```powershell
+# Windows
+.\backend\scripts\rebuild\rebuild.ps1
+
+# Linux/Mac
+bash backend/scripts/rebuild/rebuild.sh
+
+# Python direto (de dentro de backend/)
+python scripts/rebuild/rebuild.py
+
+# Makefile
+make rebuild
+
+# Sem sync do workspace
+python scripts/rebuild/rebuild.py --no-sync
+```
+
+**Por que create_all em vez de alembic upgrade head no rebuild:**
+- `Base.metadata.create_all` e atomico e confiavel; nao depende de subprocess nem de PATH
+- `alembic upgrade head` apos drop pode ter issues de transacao com PostgreSQL DDL
+- `alembic stamp head` mantem o tracking de migrations funcionando para o futuro
+- Em producao, onde nao e possivel dropar, usar `alembic upgrade head` normalmente
+
+**JSON com BOM (PowerShell):** usar `encoding="utf-8-sig"` em todas as leituras de JSON
+gerados pelo PowerShell (`Out-File`, `ConvertTo-Json | Set-Content`). O utf-8-sig e
+compativel com UTF-8 sem BOM e com UTF-8 BOM.
+
 ## Dependencias operacionais
 
 1. `python-specialist` para logica Python geral.

@@ -149,9 +149,7 @@ function Remove-ProjectsWithoutUrl {
             }
         }
     }
-    if ($Index.PSObject.Properties.Name -contains "git_repos") {
-        $Index.git_repos = @($gitRepos | Where-Object { $_.has_git -and $_.sync_enabled })
-    }
+    $Index.git_repos = @($gitRepos | Where-Object { $_.has_git -and $_.sync_enabled })
     Update-IndexCounts -Index $Index
     return $removed
 }
