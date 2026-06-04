@@ -2,6 +2,15 @@
 name: register-ticket-session
 description: Criar referencia inicial de sessao pendente no workspace C:\codes. Use somente no inicio de um trabalho com chamado ativo para criar chamados/{empresa}/{usuario}/{ano}/{sequencial}/sessoes/pendentes/NNN.md; ao concluir, a skill solicitada para a atividade deve mover a sessao para sessoes/feitas/NNN.md.
 metadata:
+  camada: atividade
+  escopo_negativo:
+    - nao cria chamados (maintain-tickets)
+    - nao decide o roteamento (registra o que route-skills-by-context decidiu)
+  dependencias:
+    - maintain-tickets
+    - route-skills-by-context
+  saidas:
+    - sessoes registradas em sessoes/feitas e pendentes
   triggers:
     - registrar sessao
     - sessao do chamado
@@ -51,6 +60,7 @@ Criar a referencia inicial de uma sessao pendente para um chamado ativo.
 1. Nao criar chamado novo.
 2. Nao escrever historico completo no registro pendente.
 3. Nao fechar chamado sem sessao em `sessoes/feitas/`.
+4. Fora do proposito desta skill, devolver ao `route-skills-by-context` (nao improvisar).
 
 ## Scripts
 

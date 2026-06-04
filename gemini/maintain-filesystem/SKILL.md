@@ -2,6 +2,14 @@
 name: maintain-filesystem
 description: Manter regras de pastas, arquivos e repositorios do workspace C:\codes. Use quando Codex precisar revisar root, file_system, regras_file_system, estrutura de empresas, .gitignore da raiz, personalizado.md, template.personalizado.md, ou organizacao de repositorios em C:\codes.
 metadata:
+  camada: atividade
+  escopo_negativo:
+    - nao decide estrutura de planos/skills (skills donas)
+    - nao remove arquivos sem rastreabilidade
+  dependencias:
+    - powershell-specialist
+  saidas:
+    - estrutura de pastas padronizada do workspace
   triggers:
     - regras de pastas
     - organizar diretorios
@@ -36,6 +44,7 @@ Manter a organizacao de pastas, arquivos e repositorios do workspace `C:\codes`.
 2. Nao criar `AGENTS.md` em empresa ou projeto sem regra especifica.
 3. Nao duplicar regras que ja estejam em `C:\codes\AGENTS.md`, `skills/AGENTS.md` ou `pv/regras_file_system/AGENTS.md`.
 4. Nao criar tool especifica em `C:\codes\tools` sem plano aprovado no contexto tools.
+5. Fora do proposito desta skill, devolver ao `route-skills-by-context` (nao improvisar).
 
 ## Regras
 

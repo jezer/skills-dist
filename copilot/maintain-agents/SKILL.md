@@ -2,6 +2,14 @@
 name: maintain-agents
 description: Revisar, criar ou atualizar arquivos AGENTS.md do workspace C:\codes somente quando o usuario solicitar explicitamente. Use para alterar regras persistentes, alinhar instrucoes entre raiz, controle de chamados e skills, numerar regras, remover contradicoes, ou garantir que AGENTS.md aponte para C:\codes\skills e para o controle de chamados.
 metadata:
+  camada: atividade
+  escopo_negativo:
+    - nao edita SKILL.md (maintain-skills)
+    - nao executa operacoes git (maintain-git)
+  dependencias:
+    - maintain-skills
+  saidas:
+    - AGENTS.md normalizados por contexto
   triggers:
     - revisar agents.md
     - atualizar regras de contexto
@@ -30,6 +38,7 @@ Manter arquivos `AGENTS.md` curtos, numerados e coerentes com `C:\codes\AGENTS.m
 2. Nao duplicar regras completas entre `root`, `ctrl_chamados`, `skills` e projetos.
 3. Nao alterar regras de projeto sem pedido explicito.
 4. Nao alterar `AGENTS.md` de outro contexto sem pedido registrado no `plan` do contexto dono, salvo pedido explicito do usuario.
+5. Fora do proposito desta skill, devolver ao `route-skills-by-context` (nao improvisar).
 
 ## Fluxo
 

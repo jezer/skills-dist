@@ -1,6 +1,15 @@
 ---
 name: fastapi-specialist
 description: Design, implement and test FastAPI applications in the workspace. Use when the activity requires creating FastAPI routers, middleware, Jinja2 templates, dependency injection, lifespan events, StaticFiles, OpenAPI configuration, or testing with TestClient and pytest-asyncio.
+metadata:
+  camada: ferramenta
+  escopo_negativo:
+    - nao modela migrations de banco (alembic-db-specialist)
+    - nao especializa por empresa (skill de atividade da cadeia)
+  dependencias:
+    - python-specialist
+  saidas:
+    - routers/services FastAPI com testes
 ---
 
 # FastAPI Specialist
@@ -26,6 +35,7 @@ middlewares, templates Jinja2, validacao com Pydantic, testes com TestClient e b
 2. Nao substitui `alembic-db-specialist` para modelos e migrations.
 3. Nao substitui `ia-gateway-specialist` para logica de roteamento de IAs.
 4. Nao faz deploy; limita-se ao codigo da aplicacao.
+5. Fora do proposito desta skill, devolver ao `route-skills-by-context` (nao improvisar).
 
 ## Padroes obrigatorios
 

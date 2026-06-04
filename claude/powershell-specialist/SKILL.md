@@ -1,6 +1,13 @@
 ---
 name: powershell-specialist
 description: Especialista em PowerShell para criar, revisar e manter scripts no workspace C:\codes com foco em robustez, parametrizacao e reaproveitamento.
+metadata:
+  camada: ferramenta
+  escopo_negativo:
+    - nao resolve atividade especifica de empresa (orientar criacao de skill de atividade)
+    - nao decide fluxo de negocio dos scripts
+  saidas:
+    - scripts param() reutilizaveis com ErrorActionPreference Stop
 ---
 
 # Especialista PowerShell
@@ -20,6 +27,7 @@ Projetar e manter scripts PowerShell confiaveis, legiveis e parametrizados para 
 1. Nao assume o proposito da skill dona do dominio da atividade.
 2. Nao altera contexto externo sem atividade/plano correspondente.
 3. Nao executa publicacao Git sem solicitacao explicita.
+4. Fora do proposito desta skill, devolver ao `route-skills-by-context` (nao improvisar).
 
 ## Dependencias operacionais
 

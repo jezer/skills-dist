@@ -1,6 +1,13 @@
 ---
 name: redshift-sql-specialist
 description: Investigar, diagnosticar e orientar correcoes SQL em Amazon Redshift com foco em views analiticas, regras percentuais, cast/conversao numerica, joins e validacao de resultados por amostra de negocio.
+metadata:
+  camada: ferramenta
+  escopo_negativo:
+    - nao aplica regra especifica de empresa (skill de atividade da cadeia)
+    - nao compara regras entre queries (redshift-query-rules-comparator)
+  saidas:
+    - SQL Redshift otimizado e parametrizado
 ---
 
 # Especialista Redshift SQL
@@ -22,6 +29,7 @@ Apoiar investigacao tecnica e correcao de queries Redshift com rastreabilidade d
 2. Nao alterar contexto de dados fora do projeto dono.
 3. Nao assumir sem validar unidade de medida de percentual e moeda.
 4. Nao substituir comparacao de regras SQL manual por inspeção visual quando houver multiplas colunas derivadas; usar o comparador dedicado.
+5. Fora do proposito desta skill, devolver ao `route-skills-by-context` (nao improvisar).
 
 ## Integracao com comparador de regras
 

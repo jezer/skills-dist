@@ -1,6 +1,15 @@
 ---
 name: alembic-db-specialist
 description: Define SQLAlchemy 2.0 models, manage Alembic migrations and write idempotent seed scripts. Use when the activity requires creating or updating ORM models, generating or applying migrations, or populating initial data for any module in the workspace.
+metadata:
+  camada: ferramenta
+  escopo_negativo:
+    - nao decide regra de negocio dos dados
+    - nao roda migration destrutiva sem plano aprovado
+  dependencias:
+    - python-specialist
+  saidas:
+    - migrations versionadas e reversiveis
 ---
 
 # Alembic DB Specialist
@@ -25,6 +34,7 @@ Padronizar a definicao de modelos ORM, o ciclo de migrations com Alembic e scrip
 2. Nao define logica de negocio; limita-se a estrutura de dados e migracao.
 3. Nao executa migrations em banco de producao sem confirmacao explicita no plano.
 4. Nao mistura dados de seed com logica de migration; seed e sempre script separado.
+5. Fora do proposito desta skill, devolver ao `route-skills-by-context` (nao improvisar).
 
 ## Padroes obrigatorios
 

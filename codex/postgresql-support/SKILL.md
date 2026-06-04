@@ -1,6 +1,13 @@
 ---
 name: postgresql-support
 description: Apoio para instalar, configurar, validar e diagnosticar PostgreSQL no Windows dentro do workspace C:\codes. Use quando Codex precisar preparar PostgreSQL local, validar pre-requisitos, configurar acesso LAN no mesmo Wi-Fi, diagnosticar IP fixo/porta/servico, planejar pgvector, ou criar backup rotativo com arquivos fixos.
+metadata:
+  camada: ferramenta
+  escopo_negativo:
+    - nao decide o schema da aplicacao (donas do dominio)
+    - nao substitui migrations (alembic-db-specialist)
+  saidas:
+    - diagnosticos e queries PostgreSQL parametrizadas
 ---
 
 # PostgreSQL Support
@@ -26,6 +33,7 @@ Apoiar instalacao e operacao local de PostgreSQL no Windows com foco em uso por 
 4. Nao assumir que `pgvector` esta disponivel sem validar a extensao no PostgreSQL instalado.
 5. Nao usar reserva DHCP ou configuracao do roteador como dependencia obrigatoria.
 6. Nao executar backup real em pasta do repositorio.
+7. Fora do proposito desta skill, devolver ao `route-skills-by-context` (nao improvisar).
 
 ## Fluxo
 

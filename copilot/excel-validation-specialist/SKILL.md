@@ -1,6 +1,14 @@
 ---
 name: excel-validation-specialist
 description: Apoiar leitura tecnica de planilhas Excel para reconciliacao com SQL, mapeando colunas/linhas, divergencias de valor e criterios de validacao para investigacao e correcao de queries analiticas.
+metadata:
+  camada: ferramenta
+  escopo_negativo:
+    - nao define a regra de negocio das planilhas (skill de atividade)
+  dependencias:
+    - python-specialist
+  saidas:
+    - validadores de planilha parametrizados
 ---
 
 # Especialista Leitura Excel Validacao
@@ -20,6 +28,7 @@ Transformar evidencias de Excel em insumos tecnicos objetivos para investigacao 
 1. Nao alterar SQL diretamente sem plano e atividade.
 2. Nao assumir significado de coluna sem evidencia no arquivo de referencia.
 3. Nao encerrar validacao sem registrar casos divergentes e criterio de aceite.
+4. Fora do proposito desta skill, devolver ao `route-skills-by-context` (nao improvisar).
 
 ## Checklist tecnico
 

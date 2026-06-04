@@ -2,6 +2,15 @@
 name: maintain-tickets
 description: Manutencao minima de chamado no workspace C:\codes. Use somente quando o chamado atual nao estiver objetivo e claro, ou quando Codex precisar criar, localizar, validar ou corrigir o chamado ativo no formato EMPRESA-USUARIO-CH-ANO-NNNNN.
 metadata:
+  camada: atividade
+  escopo_negativo:
+    - nao cria planos (maintain-planner)
+    - nao implementa a solucao do chamado
+  dependencias:
+    - maintain-filesystem
+  saidas:
+    - estrutura de chamado com sessoes
+    - indices de chamados
   triggers:
     - criar chamado
     - abrir chamado
@@ -35,6 +44,7 @@ Criar, localizar, validar ou corrigir o chamado ativo quando ele nao estiver obj
 5. Nao registrar sessao pendente; isso pertence a `register-ticket-session`.
 6. Nao criar, editar ou validar arquivo de plano diretamente; qualquer plano deve ser criado e mantido por `maintain-planner`.
 7. Nao alterar Status do chamado para `concluido` sem verificar que existe ao menos um arquivo em `sessoes/feitas/`.
+8. Fora do proposito desta skill, devolver ao `route-skills-by-context` (nao improvisar).
 
 ## Fluxo
 

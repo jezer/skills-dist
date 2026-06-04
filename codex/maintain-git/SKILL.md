@@ -2,6 +2,18 @@
 name: maintain-git
 description: Preparar ou executar operacoes Git seguras no workspace C:\codes. Use para criar repositorio local e no GitHub quando solicitado, sugerir ou criar branch, preparar mensagem de commit, executar commit ou sincronizar repositorio, seguindo C:\codes\tools\git e exigindo plano/atividade para operacoes persistentes.
 metadata:
+  camada: atividade
+  escopo_negativo:
+    - nao commita em branch protegida sem branch de trabalho
+    - nao gerencia chamados (maintain-tickets)
+    - nao decide conteudo funcional das mudancas
+  dependencias:
+    - powershell-specialist
+    - connect-github-gitlab
+  saidas:
+    - commit-push.ps1
+    - commitar-todos-repos.ps1
+    - indice de repositorios
   triggers:
     - commit
     - push
@@ -57,6 +69,7 @@ Padronizar e automatizar operacoes Git recorrentes com limites seguros.
 18. Nao tentar corrigir manualmente cadeia de autenticacao remota quando houver skill especializada de conexao disponivel.
 19. Nao encerrar sync quando houver submodulo pendente no pai (`M <submodulo>`); isso exige commit do ponteiro no repositorio pai.
 20. Nao executar clone sem branch explicita; se a branch de trabalho nao estiver informada, bloquear e solicitar a branch antes de clonar.
+21. Fora do proposito desta skill, devolver ao `route-skills-by-context` (nao improvisar).
 
 ## Fluxo
 

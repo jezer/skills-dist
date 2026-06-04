@@ -1,6 +1,15 @@
 ---
 name: python-specialist
 description: Create, review and maintain Python scripts and modules in the workspace with focus on quality, encoding safety, subprocess patterns and reuse. Use when the activity requires Python scripting beyond what a domain skill covers.
+metadata:
+  camada: ferramenta
+  escopo_negativo:
+    - nao resolve atividade especifica de empresa (orientar criacao de skill de atividade)
+    - nao decide arquitetura de projeto
+    - nao executa operacoes git (maintain-git)
+  saidas:
+    - codigo python idiomatico
+    - scripts argparse parametrizados e idempotentes
 ---
 
 # Python Specialist
@@ -22,6 +31,7 @@ para automacoes e servicos do workspace.
 1. Nao substitui a skill dona do dominio da atividade.
 2. Nao altera contexto externo sem plano/atividade correspondente.
 3. Nao publica mudancas em Git sem solicitacao explicita.
+4. Fora do proposito desta skill, devolver ao `route-skills-by-context` (nao improvisar).
 
 ## Padroes obrigatorios
 

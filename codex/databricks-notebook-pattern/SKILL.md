@@ -1,6 +1,15 @@
 ---
 name: databricks-notebook-pattern
 description: Cria e revisa notebooks Databricks seguindo a arquitetura padrao do ambiente — cabecalho Semaforo, declaracao de dependencias, padroes de carga incremental (MERGE) e full (INSERT), finalizacao com lib_normalizar. Usar sempre que criar um notebook novo ou revisar conformidade de existente com o padrao da plataforma.
+metadata:
+  camada: padroes
+  escopo_negativo:
+    - nao constroi pipeline de negocio completo (skill de atividade)
+    - nao administra o workspace Databricks
+  dependencias:
+    - python-specialist
+  saidas:
+    - notebooks no padrao com celulas parametrizadas
 ---
 
 # Databricks Notebook Pattern
@@ -166,6 +175,7 @@ Nomenclatura de arquivo: `A1.trusted.CARGA_TB_NOME.py`, `A1.raw.RAW_CARGA_TB_NOM
 3. Nao usar `mode("overwrite")` em tabela Delta sem alinhamento — preferir MERGE ou DELETE+INSERT.
 4. Nao criar funcoes uteis inline — colocar em `x.tools/x.project_functions`.
 5. Nao hardcodar catalog/schema — sempre usar variaveis do `objparameters`.
+6. Fora do proposito desta skill, devolver ao `route-skills-by-context` (nao improvisar).
 
 ## Dependencias operacionais
 
