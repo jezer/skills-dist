@@ -1,11 +1,12 @@
 ﻿{
-    "generated_at":  "2026-06-01T23:44:30",
+    "generated_at":  "2026-06-04T01:27:59",
     "apply":  false,
-    "skills_oficiais":  43,
+    "skills_oficiais":  45,
     "gemini":  {
                    "total":  42,
                    "missing":  [
-
+                                   "frontend-assets-specialist",
+                                   "ux-navigation-specialist"
                                ],
                    "extras":  [
 
@@ -14,14 +15,15 @@
     "copilot":  {
                     "total":  42,
                     "missing":  [
-
+                                    "frontend-assets-specialist",
+                                    "ux-navigation-specialist"
                                 ],
                     "extras":  [
 
                                ]
                 },
     "claude":  {
-                   "total":  42,
+                   "total":  44,
                    "missing":  [
 
                                ],
@@ -32,7 +34,8 @@
     "codex":  {
                   "total":  42,
                   "missing":  [
-
+                                  "frontend-assets-specialist",
+                                  "ux-navigation-specialist"
                               ],
                   "extras":  [
 
@@ -41,7 +44,8 @@
     "codex_global":  {
                          "total":  43,
                          "missing":  [
-
+                                         "frontend-assets-specialist",
+                                         "ux-navigation-specialist"
                                      ],
                          "extras":  [
 
