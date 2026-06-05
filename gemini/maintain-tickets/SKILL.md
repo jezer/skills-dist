@@ -48,29 +48,33 @@ Criar, localizar, validar ou corrigir o chamado ativo quando ele nao estiver obj
 
 ## Fluxo
 
+Plano 000134 do all_IA (caso 3-A): o BANCO e a fonte dos chamados - esta
+skill e CLIENTE da API do all_IA e NAO cria arquivos fisicos; a arvore
+`chamados/{empresa}/{usuario}/{ano}/{sequencial}/` e LEGADO somente leitura.
+
 1. Ler `C:\codes\AGENTS.md`.
 2. Ler `C:\codes\tools\chamados\AGENTS.md`.
-3. Se houver numero de chamado, converter para `chamados/{empresa}/{usuario}/{ano}/{sequencial}/`.
-4. Verificar se existe `chamado.md`.
-5. Se nao houver chamado claro, usar por padrao o ultimo chamado existente para o usuario e empresa ativos, salvo se o usuario solicitar explicitamente a criacao de um novo chamado ou informar outro numero.
-6. Se nao for possivel localizar o ultimo chamado, perguntar se deve informar um chamado existente ou criar novo chamado.
-7. Se criar novo chamado, exigir empresa permitida, usuario permitido e titulo.
-8. Para criar chamado novo de forma mecanica, usar `scripts/novo-chamado.ps1`.
-9. Imediatamente apos criar novo chamado, executar `route-skills-by-context` como primeiro passo obrigatorio antes de qualquer outra mudanca persistente.
-10. Registrar a sessao inicial do chamado com `register-ticket-session`, preenchendo `route-skills-by-context` como skill executora inicial.
-11. Ao concluir chamado (Status: concluido): verificar se existe arquivo em `sessoes/feitas/`; se nao existir, acionar `register-ticket-session` (`scripts/concluir-sessao.ps1`) antes de alterar o status.
+3. Se houver numero de chamado, consultar `GET /chamados/{codigo}` na API do all_IA; chamado antigo sem registro no banco pode ser lido na arvore legada (somente leitura).
+4. Se nao houver chamado claro, usar por padrao o ultimo chamado ABERTO no banco (`GET /chamados?empresa=...&usuario=...&status=aberto`) para o usuario e empresa ativos, salvo se o usuario solicitar a criacao de um novo ou informar outro numero.
+5. Se nao for possivel localizar o ultimo chamado, perguntar se deve informar um chamado existente ou criar novo chamado.
+6. Se criar novo chamado, exigir empresa permitida, usuario permitido e titulo.
+7. Para criar chamado novo de forma mecanica, usar `scripts/novo-chamado.ps1` (POST /chamados; offline = fila local drenada pelo backend, caso 6-A).
+8. Imediatamente apos criar novo chamado, executar `route-skills-by-context` como primeiro passo obrigatorio antes de qualquer outra mudanca persistente.
+9. Registrar a sessao inicial do chamado com `register-ticket-session`, preenchendo `route-skills-by-context` como skill executora inicial.
+10. Ao concluir chamado (`PATCH /chamados/{codigo}` com `status=fechado`): verificar se existe sessao `feita` no banco; se nao existir, acionar `register-ticket-session` (`scripts/concluir-sessao.ps1`) antes de fechar.
 
 ## Regras
 
 1. Empresas permitidas: `pv`, `syg`, `cnu`, `theo`, `elohim`, `skills`, `tools`.
 2. Usuarios permitidos: `jz`, `jf`.
 3. Formato do chamado: `EMPRESA-USUARIO-CH-ANO-NNNNN`.
-4. O ano reinicia a sequencia.
-5. O cabecalho do chamado fica em `chamado.md`.
+4. O ano reinicia a sequencia; o sequencial vem do banco e nunca colide com a arvore legada (a API confere as duas fontes).
+5. O chamado vive nas tabelas `chamado`/`chamado_sessao` do all_IA; NAO criar `chamado.md` novo (000134 caso 3-A).
+6. Backend fora do ar: a escrita vai para a fila local `C:\codes\plan\.fila-pendente` (JSONL) e e aplicada na drenagem (caso 6-A); leitura usa o banco indisponivel = consultar legado/espelhos.
 
 ## Scripts
 
-1. `scripts/novo-chamado.ps1`: cria a estrutura do proximo chamado anual para empresa, usuario e titulo informados e retorna `ProximaSkillObrigatoria=route-skills-by-context`; usar `-Json` quando a chamada vier de CLI que precise parsear a saida.
+1. `scripts/novo-chamado.ps1`: cria o proximo chamado anual NO BANCO via `POST /chamados` (offline = fila) e retorna `ProximaSkillObrigatoria=route-skills-by-context`; usar `-Json` quando a chamada vier de CLI que precise parsear a saida.
 
 
 

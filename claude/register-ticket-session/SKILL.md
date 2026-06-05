@@ -30,42 +30,43 @@ Criar a referencia inicial de uma sessao pendente para um chamado ativo.
 
 ## Fluxo — Abertura de sessao
 
+Plano 000134 do all_IA (caso 3-A): sessoes vivem no BANCO (tabela
+`chamado_sessao`, estado `pendente`/`feita`) - sem arquivos fisicos novos;
+a arvore `sessoes/pendentes|feitas/` e LEGADO somente leitura.
+
 1. Ler `C:\codes\AGENTS.md`.
 2. Ler `C:\codes\tools\chamados\AGENTS.md`.
-3. Confirmar o chamado ativo.
-4. Converter o chamado para `tools/chamados/chamados/{empresa}/{usuario}/{ano}/{sequencial}/`.
-5. Ler `chamado.md`.
-6. Definir o proximo `NNN` listando `sessoes/pendentes/*.md` e `sessoes/feitas/*.md`.
-7. Criar `sessoes/pendentes/NNN.md` com resumo inicial e campos de roteamento.
-8. Para abertura mecanica, usar `scripts/registrar-sessao.ps1`.
+3. Confirmar o chamado ativo (`GET /chamados/{codigo}` na API do all_IA).
+4. Criar a sessao pendente no banco via `POST /chamados/{codigo}/sessoes` com resumo inicial e campos de roteamento.
+5. Para abertura mecanica, usar `scripts/registrar-sessao.ps1` (offline = fila local, caso 6-A).
 
 ## Fluxo — Conclusao de sessao (gate obrigatorio antes de fechar chamado)
 
-1. Verificar se existe arquivo em `sessoes/pendentes/`.
-2. Se existir: mover para `sessoes/feitas/NNN.md` com resumo completo do trabalho realizado.
-3. Se nao existir: criar diretamente em `sessoes/feitas/NNN.md` com resumo retroativo.
-4. Somente apos sessao em `feitas/` confirmada: liberar conclusao do chamado (Status: concluido).
+1. Verificar se existe sessao `pendente` no banco (`GET /chamados/{codigo}`).
+2. Se existir: marcar como `feita` via `PATCH /chamados/{codigo}/sessoes/{numero}` com resumo completo do trabalho realizado.
+3. Se nao existir: criar a sessao direto como `feita` com resumo retroativo.
+4. Somente apos sessao `feita` confirmada: liberar fechamento do chamado (`status=fechado`).
 5. Para conclusao mecanica, usar `scripts/concluir-sessao.ps1`.
 
 ## Regras
 
 1. Criar referencia pendente no inicio do trabalho.
 2. Concluir sessao (feita) obrigatoriamente antes de fechar o chamado.
-3. Nao criar arquivo unico `sessoes.md`.
-4. Preservar sessoes existentes; nao renumerar.
-5. Resumo da sessao feita deve cobrir o trabalho efetivamente realizado, nao apenas a intencao inicial.
+3. A numeracao `NNN` e do banco (sequencial por chamado); preservar sessoes existentes, nao renumerar.
+4. Resumo da sessao feita deve cobrir o trabalho efetivamente realizado, nao apenas a intencao inicial.
+5. Backend fora do ar: a escrita vai para a fila local `C:\codes\plan\.fila-pendente` (JSONL), aplicada na drenagem (caso 6-A); NAO criar arquivos na arvore legada.
 
 ## Limites
 
 1. Nao criar chamado novo.
 2. Nao escrever historico completo no registro pendente.
-3. Nao fechar chamado sem sessao em `sessoes/feitas/`.
+3. Nao fechar chamado sem sessao `feita` no banco.
 4. Fora do proposito desta skill, devolver ao `route-skills-by-context` (nao improvisar).
 
 ## Scripts
 
-1. `scripts/registrar-sessao.ps1`: cria `sessoes/pendentes/NNN.md` para o chamado informado.
-2. `scripts/concluir-sessao.ps1`: move pendente para `sessoes/feitas/NNN.md` (ou cria feita diretamente se nao houver pendente) com resumo e hash; use antes de concluir o chamado.
+1. `scripts/registrar-sessao.ps1`: cria a sessao pendente NO BANCO via API (offline = fila).
+2. `scripts/concluir-sessao.ps1`: marca a ultima pendente como `feita` no banco (ou cria feita diretamente se nao houver pendente) com resumo e hash; use antes de fechar o chamado.
 
 
 

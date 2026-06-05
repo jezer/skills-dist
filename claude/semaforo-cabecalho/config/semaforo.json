@@ -1,0 +1,49 @@
+{
+  "versao": "v3.1",
+  "base_python": "C:/codes/pv/semaforo/plan/ativo/referencias/python",
+  "output_dir": "C:/codes/pv/semaforo/cabecalho/scripts/output",
+  "tabela": "tb_semaforo_cabecalho",
+  "filtros": ["lib_createobj"],
+  "fontes": [
+    {"arquivo": "lib_createobj/dmldetect.py",    "modulo": "dmldetect",     "ordem_base": 1},
+    {"arquivo": "lib_createobj/dtAtualizado.py", "modulo": "dtAtualizado",  "ordem_base": 2},
+    {"arquivo": "lib_createobj/contexttag.py",   "modulo": "contexttag",    "ordem_base": 3},
+    {"arquivo": "lib_createobj/tabbasic.py",     "modulo": "tabbasic",      "ordem_base": 4},
+    {"arquivo": "lib_createobj/tabver.py",       "modulo": "tabver",        "ordem_base": 5},
+    {"arquivo": "lib_createobj/tbstruct.py",     "modulo": "tbstruct",      "ordem_base": 6},
+    {"arquivo": "lib_createobj/env_semaforo.py", "modulo": "env_semaforo",  "ordem_base": 7},
+    {"arquivo": "lib_createobj/semafbase.py",    "modulo": "semafbase",     "ordem_base": 8},
+    {"arquivo": "lib_createobj/createobj.py",    "modulo": "createobj",     "ordem_base": 9},
+    {"arquivo": "lib_createobj/skphelp.py",      "modulo": "skphelp",       "ordem_base": 15},
+    {"arquivo": "lib_createobj/monit.py",        "modulo": "monit",         "ordem_base": 20},
+    {"arquivo": "lib_createobj/execmultfunc.py", "modulo": "execmultfunc",  "ordem_base": 25},
+    {"arquivo": "cabecalho.py",                  "modulo": "cabecalho",     "ordem_base": 30}
+  ],
+  "init_blocos": [
+    {
+      "ordem": 999, "modulo": "init", "tipo": "init", "nome": "registrar_modulos_importaveis",
+      "descricao": "Registra lib_operacionalizar, lib_dependencia, lib_normalizar e lib_incremental em sys.modules — zero wheel, zero pip install",
+      "nota": "codigo gerado dinamicamente pelo script gerar-arquivo-cabecalho.py via _CODIGO_REGISTRAR_MODULOS"
+    },
+    {
+      "ordem": 1000, "modulo": "init", "tipo": "init", "nome": "criar_sf_app",
+      "descricao": "Instancia SemaforoApp e registra globalmente em builtins",
+      "codigo": "import builtins\n_Sf_app = SemaforoApp(habilitar_grid=True, sparks=spark)\nwith builtins._Sf_lock:\n    builtins.Sf_app = _Sf_app\n    builtins.Sf_tag = None"
+    },
+    {
+      "ordem": 1001, "modulo": "init", "tipo": "init", "nome": "inicializar_installer",
+      "descricao": "GetTags, valida versao da lib e inicializa objparameters",
+      "codigo": "_Sf_app.installer.GetTags()\n_Sf_app.installer.TestarSeSemaforoEstaInstalado()\n_Sf_app.installer.IniciarObjPadroes()"
+    },
+    {
+      "ordem": 1002, "modulo": "init", "tipo": "init", "nome": "expandir_objparameters",
+      "descricao": "Importa libs de operacao e expande objparameters para globals do notebook",
+      "codigo": "import lib_dependencia\nimport lib_normalizar\nimport lib_operacionalizar\nimport lib_incremental\nobjparameters = _Sf_app.installer.objparameters\nobjparameters['LogOnTable'] = False\nobjparameters['DebugMode'] = False\n_ = [globals().__setitem__(k, v) for k, v in objparameters.items()]"
+    },
+    {
+      "ordem": 1003, "modulo": "init", "tipo": "init", "nome": "db_cat_control",
+      "descricao": "Deriva variavel db_cat_control a partir de db_cat_trusted",
+      "codigo": "db_cat_control = db_cat_trusted.replace('_trusted', '_control')"
+    }
+  ]
+}

@@ -3,92 +3,73 @@ param(
     [Parameter(Mandatory = $true)][string]$Titulo,
     [Parameter(Mandatory = $true)][string]$Resumo,
     [string]$DataHora = (Get-Date -Format "o"),
-    [string]$BasePath = "C:\codes\tools\chamados\chamados",
     [switch]$Json
 )
+
+# Plano 000134 do all_IA (caso 3-A): conclui a ULTIMA sessao pendente do
+# chamado NO BANCO (sem pendente: cria a sessao direto como feita).
+# OFFLINE (caso 6-A): a conclusao vai para a fila local.
 
 $ErrorActionPreference = "Stop"
 
 if ($Chamado -notmatch '^(?<empresa>[A-Z]+)-(?<usuario>[A-Z]+)-CH-(?<ano>\d{4})-(?<seq>\d{5})$') {
     throw "Formato de chamado invalido: $Chamado"
 }
+$chamadoCanonico = $Chamado.ToUpperInvariant()
+$tituloNorm = $Titulo.Trim()
 
-$empresa = $Matches.empresa.ToLowerInvariant()
-$usuario = $Matches.usuario.ToLowerInvariant()
-$ano = $Matches.ano
-$seq = $Matches.seq
-$chamadoCanonico = "$($empresa.ToUpperInvariant())-$($usuario.ToUpperInvariant())-CH-$ano-$seq"
-
-$chamadoPath = Join-Path $BasePath (Join-Path $empresa (Join-Path $usuario (Join-Path $ano $seq)))
-$pendentesPath = Join-Path $chamadoPath "sessoes\pendentes"
-$feitasPath = Join-Path $chamadoPath "sessoes\feitas"
-New-Item -ItemType Directory -Path $feitasPath -Force | Out-Null
-
-# Descobre o maior NNN entre pendentes e feitas
-$existentes = @()
-foreach ($dir in @($pendentesPath, $feitasPath)) {
-    if (Test-Path -LiteralPath $dir) {
-        $existentes += Get-ChildItem -LiteralPath $dir -Filter "*.md" -ErrorAction SilentlyContinue |
-            Where-Object { $_.BaseName -match '^\d{3}$' } |
-            ForEach-Object { [int]$_.BaseName }
-    }
-}
-
-$hashTexto = "$chamadoCanonico|$empresa|$usuario|$($Titulo.Trim())|$DataHora"
+$hashTexto = "$chamadoCanonico|$tituloNorm|$DataHora"
 $sha = [System.Security.Cryptography.SHA256]::Create()
-$bytes = [System.Text.Encoding]::UTF8.GetBytes($hashTexto)
-$hash = (($sha.ComputeHash($bytes) | ForEach-Object { $_.ToString("x2") }) -join "")
+$hash = ((($sha.ComputeHash([System.Text.Encoding]::UTF8.GetBytes($hashTexto))) | ForEach-Object { $_.ToString("x2") }) -join "")
 $sessaoId = "SESS-" + ([DateTimeOffset]::Parse($DataHora).ToString("yyyy-MM-dd-HHmmss"))
 
-# Tenta mover sessao pendente existente; se nao houver, cria diretamente em feitas
-$pendente = if (Test-Path -LiteralPath $pendentesPath) {
-    Get-ChildItem -LiteralPath $pendentesPath -Filter "*.md" -ErrorAction SilentlyContinue |
-        Where-Object { $_.BaseName -match '^\d{3}$' } |
-        Sort-Object Name | Select-Object -Last 1
-} else { $null }
-
-if ($pendente) {
-    $nnn = $pendente.BaseName
-    $destino = Join-Path $feitasPath "$nnn.md"
-    $conteudo = @"
+$conteudo = @"
 ## $sessaoId - $chamadoCanonico
 
 - Chamado: $chamadoCanonico
-- Empresa: $empresa
-- Usuario atual: $usuario
-- Titulo: $($Titulo.Trim())
+- Titulo: $tituloNorm
 - Data/hora: $DataHora
 - Status da sessao: feita
 - Hash: $hash
 - Resumo: $($Resumo.Trim())
 "@
-    Set-Content -LiteralPath $destino -Value $conteudo -Encoding UTF8
-    Remove-Item -LiteralPath $pendente.FullName
-} else {
-    $proximo = if ($existentes) { (($existentes | Measure-Object -Maximum).Maximum + 1) } else { 1 }
-    $nnn = $proximo.ToString("000")
-    $destino = Join-Path $feitasPath "$nnn.md"
-    $conteudo = @"
-## $sessaoId - $chamadoCanonico
 
-- Chamado: $chamadoCanonico
-- Empresa: $empresa
-- Usuario atual: $usuario
-- Titulo: $($Titulo.Trim())
-- Data/hora: $DataHora
-- Status da sessao: feita
-- Hash: $hash
-- Resumo: $($Resumo.Trim())
-"@
-    Set-Content -LiteralPath $destino -Value $conteudo -Encoding UTF8
-}
+$apiBase = if ($env:ALLIA_API_URL) { $env:ALLIA_API_URL } else { "http://localhost:8000" }
 
-$resultado = [pscustomobject]@{
-    Sessao     = $nnn
-    Arquivo    = $destino
-    Hash       = $hash
-    Chamado    = $chamadoCanonico
-    Pendente   = if ($pendente) { $pendente.FullName } else { $null }
+try {
+    $det = Invoke-RestMethod -Method Get -Uri "$apiBase/chamados/$chamadoCanonico" -TimeoutSec 30
+    $pendente = @($det.sessoes | Where-Object { $_.estado -eq "pendente" }) | Select-Object -Last 1
+    if ($pendente) {
+        $payload = @{ titulo = $tituloNorm; conteudo = $conteudo; estado = "feita" }
+        $resp = Invoke-RestMethod -Method Patch -Uri "$apiBase/chamados/$chamadoCanonico/sessoes/$($pendente.numero)" `
+            -ContentType "application/json; charset=utf-8" `
+            -Body ([System.Text.Encoding]::UTF8.GetBytes(($payload | ConvertTo-Json -Depth 4))) -TimeoutSec 30
+    } else {
+        $payload = @{ titulo = $tituloNorm; conteudo = $conteudo; estado = "feita" }
+        $resp = Invoke-RestMethod -Method Post -Uri "$apiBase/chamados/$chamadoCanonico/sessoes" `
+            -ContentType "application/json; charset=utf-8" `
+            -Body ([System.Text.Encoding]::UTF8.GetBytes(($payload | ConvertTo-Json -Depth 4))) -TimeoutSec 30
+    }
+    $resultado = [pscustomobject]@{
+        Sessao  = $resp.numero
+        Origem  = "api-banco"
+        Hash    = $hash
+        Chamado = $chamadoCanonico
+    }
+} catch {
+    $filaDir = "C:\codes\plan\.fila-pendente"
+    if (-not (Test-Path -LiteralPath $filaDir)) { New-Item -ItemType Directory -Path $filaDir -Force | Out-Null }
+    $arquivo = Join-Path $filaDir ("{0}-{1}.jsonl" -f (Get-Date -Format "yyyyMMdd-HHmmss-fff"), (Get-Random -Maximum 9999))
+    $payload = @{ codigo = $chamadoCanonico; titulo = $tituloNorm; conteudo = $conteudo }
+    $linha = (@{ op = "concluir-sessao"; payload = $payload } | ConvertTo-Json -Depth 6 -Compress)
+    [System.IO.File]::WriteAllText($arquivo, $linha + "`n", (New-Object System.Text.UTF8Encoding($false)))
+    $resultado = [pscustomobject]@{
+        Sessao  = "(conclusao enfileirada offline)"
+        Origem  = "fila-offline"
+        Fila    = $arquivo
+        Hash    = $hash
+        Chamado = $chamadoCanonico
+    }
 }
 
 if ($Json) { $resultado | ConvertTo-Json -Compress } else { $resultado }
