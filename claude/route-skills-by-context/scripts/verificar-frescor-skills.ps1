@@ -12,7 +12,9 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-$apiBase = if ($env:ALLIA_API_URL) { $env:ALLIA_API_URL } else { "http://localhost:8000" }
+# 127.0.0.1 (nao "localhost"): a resolucao IPv6 do localhost custa ~2s por
+# processo no Windows e estouraria o timeout curto.
+$apiBase = if ($env:ALLIA_API_URL) { $env:ALLIA_API_URL } else { "http://127.0.0.1:8000" }
 $pendenciaPath = "C:\codes\skills\indices\.sync-pendente"
 
 function Write-Pendencia {
@@ -26,7 +28,13 @@ function Write-Pendencia {
     } catch { }
 }
 
-$client = New-Object System.Net.Http.HttpClient
+# Windows PowerShell 5.1: carrega System.Net.Http antes de usar HttpClient.
+# UseProxy=false evita a deteccao de proxy do Windows (~2s por processo),
+# que estouraria o timeout curto em chamadas localhost.
+Add-Type -AssemblyName System.Net.Http -ErrorAction SilentlyContinue
+$handler = New-Object System.Net.Http.HttpClientHandler
+$handler.UseProxy = $false
+$client = New-Object System.Net.Http.HttpClient($handler)
 $client.Timeout = [TimeSpan]::FromMilliseconds($TimeoutMs)
 $status = $null
 try {
